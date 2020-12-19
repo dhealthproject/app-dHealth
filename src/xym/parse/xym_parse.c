@@ -622,6 +622,7 @@ static int parse_inner_txn_content(parse_context_t *context, uint32_t len, bool 
 }
 
 static int parse_aggregate_txn_content(parse_context_t *context) {
+     BAIL_IF_ERR(!N_xym_pstate.hashSigning, E_DISABLED_HASH_TX);
     // get header first
     txn_fee_t *fee = (txn_fee_t*) read_data(context, sizeof(txn_fee_t)); // Read data and security check
     BAIL_IF_ERR(fee == NULL, E_NOT_ENOUGH_DATA);

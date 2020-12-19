@@ -56,6 +56,15 @@ unsigned short io_exchange_al(unsigned char channel, unsigned short tx_len) {
     return 0;
 }
 
+static void xym_nv_state_init() {
+    if (N_xym_pstate.initialized != 0x01) {
+        uint8_t initialized = 0x01;
+        nvm_write((void*)&N_xym_pstate.initialized, &initialized, 1);
+        uint8_t hashSigning = 0x00;
+        nvm_write((void*)&N_xym_pstate.hashSigning, &hashSigning, 1);
+    }
+}
+
 void xym_main(void) {
     volatile unsigned int rx = 0;
     volatile unsigned int tx = 0;
@@ -203,7 +212,7 @@ __attribute__((section(".boot"))) int main(void) {
                 // grab the current plane mode setting
                 G_io_app.plane_mode = os_setting_get(OS_SETTING_PLANEMODE, NULL, 0);
 #endif // TARGET_NANOX
-
+                xym_nv_state_init();
                 USB_power(0);
                 USB_power(1);
 

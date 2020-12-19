@@ -47,6 +47,14 @@ typedef struct {
 extern transaction_context_t transactionContext;
 extern sign_state_e signState;
 
+typedef struct {
+    uint8_t initialized;
+    uint8_t hashSigning;
+} xym_nv_state_t;
+
+extern xym_nv_state_t const N_state_pic;
+#define N_xym_pstate  (*(volatile  xym_nv_state_t *)PIC(&N_state_pic))
+
 void reset_transaction_context();
 
 #endif //LEDGER_APP_XYM_GLOBAL_H
