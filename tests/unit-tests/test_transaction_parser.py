@@ -137,7 +137,7 @@ TESTS_CASES = {
     "multisig_transfer_transaction.json": [
         ("Transaction Type", "Aggregate Bonded"),
         ("Agg. Tx Hash", "4941C270B56778E01629FC82EDDC622668F076CE1583AFCCA3F6DE7FE03615BB"),
-        ("Inner TX Type", "Transfer"),
+        ("Detail TX Type", "Transfer"),
         ("Recipient", "TBKQPST7HUOJA2PBNYNA7TT4LLKGA5BB5UY6M4Y"),
         ("Amount", "10 XYM"),
         ("Message Type", "Plain text"),

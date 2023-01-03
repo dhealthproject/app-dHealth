@@ -1,6 +1,6 @@
 {
     "common_txn_header": {
-        "transactionHash": "3b5e1fa6445653c971a50687e75e6d09fb30481055e3990c84b25e9222dc1155",
+        "transactionHash": "4941c270b56778e01629fc82eddc622668f076ce1583afcca3f6de7fe03615bb",
         "version": 1,
         "networkType": 152,
         "transactionType": "AGGREGATE_BONDED",
@@ -21,7 +21,7 @@
                     "recipient": "985507ca7f3d1c9069e16e1a0fce7c5ad4607421ed31e673",
                     "mosaicList": [
                         {
-                            "mosaicId": 657388647902535996,
+                            "mosaicId": 8268645399043017678,
                             "amount": 10000000
                         }
                     ],
