@@ -53,7 +53,7 @@ target_compile_options(test_bip32_path_extraction PRIVATE -Wall -Wextra -pedanti
 add_compile_definitions(test_bip32_path_extraction PRIVATE FUZZ)
 
 target_include_directories(test_transaction_parser PRIVATE . ${APP_SRC_DIR}/ ${APP_SRC_DIR}//xym)
-target_link_libraries(test_transaction_parser PRIVATE bsd cmocka)
+target_link_libraries(test_transaction_parser PRIVATE bsd)
 
 target_include_directories(test_bip32_path_extraction PRIVATE . ${APP_SRC_DIR}/ ${APP_SRC_DIR}//xym)
 target_link_libraries(test_bip32_path_extraction PRIVATE bsd cmocka)

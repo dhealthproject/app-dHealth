@@ -16,8 +16,9 @@ make
 
 ## Running tests
 
-In the build folder, run:
+In the unit-tests folder, run:
 
 ```shell
-./test_transaction_parser
+./test_transaction_parser.py
+build/test_bip32_path_extraction
 ```

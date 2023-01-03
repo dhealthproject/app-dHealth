@@ -6,3 +6,4 @@ obj
 src/glyphs.c
 src/glyphs.h
 tests/unit-tests/build/*
+tests/unit-tests/temp_txn.raw
