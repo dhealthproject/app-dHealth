@@ -22,8 +22,8 @@ def check_transaction(test_name, backend, navigator, transaction_filename):
     transaction = load_transaction_from_file(transaction_filename)
     nem = SymbolClient(backend)
     with nem.send_async_sign_message(SYMBOL_PATH, transaction):
-        navigator.navigate_until_text_and_compare(NavIns(NavInsID.RIGHT_CLICK),
-                                                  [NavIns(NavInsID.BOTH_CLICK),
+        navigator.navigate_until_text_and_compare(NavInsID.RIGHT_CLICK,
+                                                  [NavInsID.BOTH_CLICK,
                                                    NavIns(NavInsID.WAIT, ([0]))],
                                                   "Approve",
                                                   ROOT_SCREENSHOT_PATH,
@@ -42,8 +42,8 @@ def test_sign_tx_refused(test_name, backend, firmware, navigator):
     client = SymbolClient(backend)
     with client.send_async_sign_message(SYMBOL_PATH, transaction):
         backend.raise_policy = RaisePolicy.RAISE_NOTHING
-        navigator.navigate_until_text_and_compare(NavIns(NavInsID.RIGHT_CLICK),
-                                                  [NavIns(NavInsID.BOTH_CLICK)],
+        navigator.navigate_until_text_and_compare(NavInsID.RIGHT_CLICK,
+                                                  [NavInsID.BOTH_CLICK],
                                                   "Reject",
                                                   ROOT_SCREENSHOT_PATH,
                                                   test_name)

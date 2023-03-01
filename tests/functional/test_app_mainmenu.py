@@ -1,4 +1,4 @@
-from ragger.navigator import NavInsID, NavIns
+from ragger.navigator import NavInsID
 
 from utils import ROOT_SCREENSHOT_PATH
 
@@ -7,8 +7,8 @@ from utils import ROOT_SCREENSHOT_PATH
 def test_app_mainmenu(navigator, test_name):
     # Navigate in the main menu
     instructions = [
-        NavIns(NavInsID.RIGHT_CLICK),
-        NavIns(NavInsID.RIGHT_CLICK)
+        NavInsID.RIGHT_CLICK,
+        NavInsID.RIGHT_CLICK
     ]
     navigator.navigate_and_compare(ROOT_SCREENSHOT_PATH, test_name, instructions,
                                    screen_change_before_first_instruction=False)

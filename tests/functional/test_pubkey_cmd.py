@@ -1,6 +1,6 @@
 from ragger.backend import SpeculosBackend
 from ragger.backend.interface import RaisePolicy
-from ragger.navigator import NavInsID, NavIns
+from ragger.navigator import NavInsID
 
 from apps.symbol import SymbolClient, ErrorType
 from utils import ROOT_SCREENSHOT_PATH
@@ -28,8 +28,8 @@ def test_get_public_key_non_confirm(backend):
 def test_get_public_key_confirm_accepted(backend, navigator, test_name):
     client = SymbolClient(backend)
     with client.send_async_get_public_key_confirm(SYMBOL_PATH):
-        navigator.navigate_until_text_and_compare(NavIns(NavInsID.RIGHT_CLICK),
-                                                  [NavIns(NavInsID.BOTH_CLICK)],
+        navigator.navigate_until_text_and_compare(NavInsID.RIGHT_CLICK,
+                                                  [NavInsID.BOTH_CLICK],
                                                   "Approve",
                                                   ROOT_SCREENSHOT_PATH,
                                                   test_name)
@@ -43,8 +43,8 @@ def test_get_public_key_confirm_refused(backend, navigator, test_name):
     client = SymbolClient(backend)
     with client.send_async_get_public_key_confirm(SYMBOL_PATH):
         backend.raise_policy = RaisePolicy.RAISE_NOTHING
-        navigator.navigate_until_text_and_compare(NavIns(NavInsID.RIGHT_CLICK),
-                                                  [NavIns(NavInsID.BOTH_CLICK)],
+        navigator.navigate_until_text_and_compare(NavInsID.RIGHT_CLICK,
+                                                  [NavInsID.BOTH_CLICK],
                                                   "Reject",
                                                   ROOT_SCREENSHOT_PATH,
                                                   test_name)
