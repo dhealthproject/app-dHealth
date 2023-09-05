@@ -5,7 +5,7 @@
 #include <stdint.h>
 #include <stdlib.h>
 
-#include "parse/xym_parse.h"
+#include "parse/dhp_parse.h"
 #include "format/format.h"
 #include "apdu/global.h"  // FIXME: transaction_context_t should be defined elsewhere
 
