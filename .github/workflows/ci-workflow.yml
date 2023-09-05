@@ -54,7 +54,7 @@ jobs:
             --form email=$EMAIL \
             --form file=@cov-int.tar.gz \
             --form version=master \
-            --form description="Symbol app" \
+            --form description="dHealth app" \
             https://scan.coverity.com/builds?project=LedgerHQ%2Fapp-symbol
         env:
           EMAIL: ${{ secrets.COVERITY_SCAN_EMAIL }}

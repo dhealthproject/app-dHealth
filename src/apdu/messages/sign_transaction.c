@@ -1,7 +1,7 @@
 /*******************************************************************************
-*    XYM Wallet
+*    DHP Wallet
 *    (c) 2020 Ledger
-*    (c) 2020 FDS
+*    (c) 2023 dHealth
 *
 *  Licensed under the Apache License, Version 2.0 (the "License");
 *  you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@
 #include "sign_transaction.h"
 #include <os.h>
 #include "global.h"
-#include "xym/xym_helpers.h"
+#include "dhp/dhp_helpers.h"
 #include "ui/main/idle_menu.h"
 #include "ui/transaction/review_menu.h"
 #include "transaction/transaction.h"

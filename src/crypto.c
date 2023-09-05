@@ -15,7 +15,7 @@
  *  limitations under the License.
  *****************************************************************************/
 #include "crypto.h"
-#include "xym_helpers.h"
+#include "dhp_helpers.h"
 #include "limitations.h"
 
 #include <string.h>
@@ -26,7 +26,7 @@ void crypto_derive_private_key( const uint32_t*              bip32_path,
                                 const CurveType_t            curve_type,
                                       cx_ecfp_private_key_t* private_key    )
 {
-    uint8_t raw_private_key[XYM_PRIVATE_KEY_LENGTH] = {0};
+    uint8_t raw_private_key[DHP_PRIVATE_KEY_LENGTH] = {0};
 
     BEGIN_TRY 
     {

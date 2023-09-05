@@ -1,7 +1,7 @@
 /*******************************************************************************
-*   XYM Wallet
+*   DHP Wallet
 *   (c) 2017 Ledger
-*   (c) 2020 FDS
+*   (c) 2023 dHealth
 *
 *  Licensed under the Apache License, Version 2.0 (the "License");
 *  you may not use this file except in compliance with the License.
@@ -15,8 +15,8 @@
 *  See the License for the specific language governing permissions and
 *  limitations under the License.
 ********************************************************************************/
-#ifndef LEDGER_APP_XYM_READERS_H
-#define LEDGER_APP_XYM_READERS_H
+#ifndef LEDGER_APP_DHP_READERS_H
+#define LEDGER_APP_DHP_READERS_H
 
 #include <stdint.h>
 
@@ -55,4 +55,4 @@ static inline uint64_t read_uint64(const uint8_t *src) {
            (uint64_t) src[6] << 48 |
            (uint64_t) src[7] << 56;
 }
-#endif //LEDGER_APP_XYM_READERS_H
+#endif //LEDGER_APP_DHP_READERS_H

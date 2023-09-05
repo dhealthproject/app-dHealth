@@ -1,7 +1,7 @@
 /*******************************************************************************
-*    XYM Wallet
+*    DHP Wallet
 *    (c) 2020 Ledger
-*    (c) 2020 FDS
+*    (c) 2023 dHealth
 *
 *  Licensed under the Apache License, Version 2.0 (the "License");
 *  you may not use this file except in compliance with the License.
@@ -33,9 +33,9 @@ UX_STEP_NOCB(
         ux_idle_flow_1_step,
         pnn,
         {
-            &C_icon_symbol,
+            &C_icon_dHealth,
             "Welcome to",
-            "XYM Wallet",
+            "DHP Wallet",
         });
 
 UX_STEP_NOCB(
@@ -88,7 +88,7 @@ static void ui_menu_about(void) {
 }
 
 void display_idle_menu(void) {
-    nbgl_useCaseHome(APPNAME, &C_stax_app_symbol_64px,
+    nbgl_useCaseHome(APPNAME, &C_stax_app_dHealth_64px,
                      NULL, false, ui_menu_about, app_quit);
 }
 

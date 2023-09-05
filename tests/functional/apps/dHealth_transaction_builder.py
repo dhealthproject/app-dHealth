@@ -1,4 +1,4 @@
-# Transaction builder for Ledger Symbol application
+# Transaction builder for Ledger dHealth application
 # The input, a JSON format is a custom one.
 # Examples can be found in the tests/corpus directory.
 # Maybe its readability could by improved by introducing more enums for network values, payload types, etc..

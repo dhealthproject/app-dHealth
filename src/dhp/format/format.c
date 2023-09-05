@@ -1,7 +1,7 @@
 /*******************************************************************************
-*   XYM Wallet
+*   DHP Wallet
 *   (c) 2017 Ledger
-*   (c) 2020 FDS
+*   (c) 2023 dHealth
 *
 *  Licensed under the Apache License, Version 2.0 (the "License");
 *  you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@
 #include "readers.h"
 #include "printers.h"
 #include "apdu/global.h"
-#include "xym/xym_helpers.h"
+#include "dhp/dhp_helpers.h"
 #include "common.h"
 #include "base32.h"
 
@@ -52,9 +52,9 @@ static void int16_formatter(const field_t *field, char *dst) {
 
 static void uint8_formatter(const field_t *field, char *dst) {
     uint8_t value = read_uint8(field->data);
-    if (field->id == XYM_UINT8_MOSAIC_COUNT) {
+    if (field->id == DHP_UINT8_MOSAIC_COUNT) {
         SNPRINTF(dst, "Found %d", value);
-    } else if (field->id == XYM_UINT8_TXN_MESSAGE_TYPE) {
+    } else if (field->id == DHP_UINT8_TXN_MESSAGE_TYPE) {
         if (value == 0x00) {
             SNPRINTF(dst, "%s", "Plain text");
         } else if (value == 0x01) {
@@ -62,43 +62,43 @@ static void uint8_formatter(const field_t *field, char *dst) {
         } else if (value == 0xFE) {
             SNPRINTF(dst, "%s", "Persistent harvesting delegation");
         }
-    } else if (field->id == XYM_UINT8_AA_TYPE) {
+    } else if (field->id == DHP_UINT8_AA_TYPE) {
         if (value == 0) {
             SNPRINTF(dst, "%s", "Unlink address");
         } else if (value == 1) {
             SNPRINTF(dst, "%s", "Link address");
         }
-    } else if (field->id == XYM_UINT8_KL_TYPE) {
+    } else if (field->id == DHP_UINT8_KL_TYPE) {
         if (value == 0x00) {
             SNPRINTF(dst, "%s", "Unlink");
         } else if (value == 0x01) {
             SNPRINTF(dst, "%s", "Link");
         }
-    } else if (field->id == XYM_UINT8_NS_REG_TYPE) {
+    } else if (field->id == DHP_UINT8_NS_REG_TYPE) {
         if (value == 0) {
             SNPRINTF(dst, "%s", "Root namespace");
         } else if (value == 1) {
             SNPRINTF(dst, "%s", "Sub namespace");
         }
-    } else if (field->id == XYM_UINT8_MSC_ACTION) {
+    } else if (field->id == DHP_UINT8_MSC_ACTION) {
         if (value == 0) {
             SNPRINTF(dst, "%s", "Decrease");
         } else if (value == 1) {
             SNPRINTF(dst, "%s", "Increase");
         }
-    } else if (field->id == XYM_UINT8_MD_SUPPLY_FLAG) {
+    } else if (field->id == DHP_UINT8_MD_SUPPLY_FLAG) {
         if ((value & 0x01) != 0) {
             SNPRINTF(dst, "%s", "Yes");
         } else {
             SNPRINTF(dst, "%s", "No");
         }
-    } else if (field->id == XYM_UINT8_MD_TRANS_FLAG) {
+    } else if (field->id == DHP_UINT8_MD_TRANS_FLAG) {
         if ((value & 0x02) != 0) {
             SNPRINTF(dst, "%s", "Yes");
         } else {
             SNPRINTF(dst, "%s", "No");
         }
-    } else if (field->id == XYM_UINT8_MD_RESTRICT_FLAG) {
+    } else if (field->id == DHP_UINT8_MD_RESTRICT_FLAG) {
         if ((value & 0x04) != 0) {
             SNPRINTF(dst, "%s", "Yes");
         } else {
@@ -112,11 +112,11 @@ static void uint8_formatter(const field_t *field, char *dst) {
 static void uint8_custom_formatter(const field_t *field, char *dst) {
     uint8_t value = read_uint8(field->data);
     if (value != 0) {
-        if (field->id == XYM_UINT8_AA_RESTRICTION) {
+        if (field->id == DHP_UINT8_AA_RESTRICTION) {
             SNPRINTF(dst, "%d %s", value, "address(es)");
-        } else if (field->id == XYM_UINT8_AM_RESTRICTION) {
+        } else if (field->id == DHP_UINT8_AM_RESTRICTION) {
             SNPRINTF(dst, "%d %s", value, "mosaic(s)");
-        } else if (field->id == XYM_UINT8_AO_RESTRICTION) {
+        } else if (field->id == DHP_UINT8_AO_RESTRICTION) {
             SNPRINTF(dst, "%d %s", value, "operation(s)");
         }
     } else {
@@ -126,7 +126,7 @@ static void uint8_custom_formatter(const field_t *field, char *dst) {
 
 static void uint16_formatter(const field_t *field, char *dst) {
     uint16_t value = read_uint16(field->data);
-    if (field->id == XYM_UINT16_AR_RESTRICT_TYPE) {
+    if (field->id == DHP_UINT16_AR_RESTRICT_TYPE) {
         if ((value & 0x0001) != 0) {
             SNPRINTF(dst, "%s", "Address");
         } else if ((value & 0x0002) != 0) {
@@ -134,13 +134,13 @@ static void uint16_formatter(const field_t *field, char *dst) {
         } else if ((value & 0x0004) != 0) {
             SNPRINTF(dst, "%s", "Transaction Type");
         }
-    } else if (field->id == XYM_UINT16_AR_RESTRICT_DIRECTION) {
+    } else if (field->id == DHP_UINT16_AR_RESTRICT_DIRECTION) {
         if ((value & 0x4000) != 0) {
             SNPRINTF(dst, "%s", "Outgoing");
         } else {
             SNPRINTF(dst, "%s", "Imcoming");
         }
-    } else if (field->id == XYM_UINT16_AR_RESTRICT_OPERATION) {
+    } else if (field->id == DHP_UINT16_AR_RESTRICT_OPERATION) {
         if ((value & 0x8000) != 0) {
             SNPRINTF(dst, "%s", "Block");
         } else {
@@ -148,30 +148,30 @@ static void uint16_formatter(const field_t *field, char *dst) {
         }
     } else {
         switch (value) {
-            CASE_FIELDVALUE(XYM_TXN_TRANSFER, "Transfer")
-            CASE_FIELDVALUE(XYM_TXN_REGISTER_NAMESPACE, "Namespace Registration")
-            CASE_FIELDVALUE(XYM_TXN_ACCOUNT_METADATA, "Account Metadata")
-            CASE_FIELDVALUE(XYM_TXN_MOSAIC_METADATA, "Mosaic Metadata")
-            CASE_FIELDVALUE(XYM_TXN_NAMESPACE_METADATA, "Namespace Metadata")
-            CASE_FIELDVALUE(XYM_TXN_ADDRESS_ALIAS, "Address Alias")
-            CASE_FIELDVALUE(XYM_TXN_MOSAIC_ALIAS, "Mosaic Alias")
-            CASE_FIELDVALUE(XYM_TXN_ACCOUNT_ADDRESS_RESTRICTION, "Account Address Restriction")
-            CASE_FIELDVALUE(XYM_TXN_ACCOUNT_MOSAIC_RESTRICTION, "Account Mosaic Restriction")
-            CASE_FIELDVALUE(XYM_TXN_ACCOUNT_OPERATION_RESTRICTION, "Account Operation Restriction")
-            CASE_FIELDVALUE(XYM_TXN_MOSAIC_ADDRESS_RESTRICTION, "Mosaic Address Restriction")
-            CASE_FIELDVALUE(XYM_TXN_MOSAIC_GLOBAL_RESTRICTION, "Mosaic Global Restriction")
-            CASE_FIELDVALUE(XYM_TXN_MOSAIC_DEFINITION, "Mosaic definition")
-            CASE_FIELDVALUE(XYM_TXN_MOSAIC_SUPPLY_CHANGE, "Mosaic Supply Change")
-            CASE_FIELDVALUE(XYM_TXN_MODIFY_MULTISIG_ACCOUNT, "Multisig Account Modification")
-            CASE_FIELDVALUE(XYM_TXN_ACCOUNT_KEY_LINK, "Account Key Link")
-            CASE_FIELDVALUE(XYM_TXN_NODE_KEY_LINK, "Node Key Link")
-            CASE_FIELDVALUE(XYM_TXN_VOTING_KEY_LINK, "Voting Key Link")
-            CASE_FIELDVALUE(XYM_TXN_VRF_KEY_LINK, "Vrf Key Link")
-            CASE_FIELDVALUE(XYM_TXN_AGGREGATE_COMPLETE, "Aggregate Complete")
-            CASE_FIELDVALUE(XYM_TXN_AGGREGATE_BONDED, "Aggregate Bonded")
-            CASE_FIELDVALUE(XYM_TXN_FUND_LOCK, "Funds Lock")
-            CASE_FIELDVALUE(XYM_TXN_SECRET_LOCK, "Secret Lock")
-            CASE_FIELDVALUE(XYM_TXN_SECRET_PROOF, "Secret Proof")
+            CASE_FIELDVALUE(DHP_TXN_TRANSFER, "Transfer")
+            CASE_FIELDVALUE(DHP_TXN_REGISTER_NAMESPACE, "Namespace Registration")
+            CASE_FIELDVALUE(DHP_TXN_ACCOUNT_METADATA, "Account Metadata")
+            CASE_FIELDVALUE(DHP_TXN_MOSAIC_METADATA, "Mosaic Metadata")
+            CASE_FIELDVALUE(DHP_TXN_NAMESPACE_METADATA, "Namespace Metadata")
+            CASE_FIELDVALUE(DHP_TXN_ADDRESS_ALIAS, "Address Alias")
+            CASE_FIELDVALUE(DHP_TXN_MOSAIC_ALIAS, "Mosaic Alias")
+            CASE_FIELDVALUE(DHP_TXN_ACCOUNT_ADDRESS_RESTRICTION, "Account Address Restriction")
+            CASE_FIELDVALUE(DHP_TXN_ACCOUNT_MOSAIC_RESTRICTION, "Account Mosaic Restriction")
+            CASE_FIELDVALUE(DHP_TXN_ACCOUNT_OPERATION_RESTRICTION, "Account Operation Restriction")
+            CASE_FIELDVALUE(DHP_TXN_MOSAIC_ADDRESS_RESTRICTION, "Mosaic Address Restriction")
+            CASE_FIELDVALUE(DHP_TXN_MOSAIC_GLOBAL_RESTRICTION, "Mosaic Global Restriction")
+            CASE_FIELDVALUE(DHP_TXN_MOSAIC_DEFINITION, "Mosaic definition")
+            CASE_FIELDVALUE(DHP_TXN_MOSAIC_SUPPLY_CHANGE, "Mosaic Supply Change")
+            CASE_FIELDVALUE(DHP_TXN_MODIFY_MULTISIG_ACCOUNT, "Multisig Account Modification")
+            CASE_FIELDVALUE(DHP_TXN_ACCOUNT_KEY_LINK, "Account Key Link")
+            CASE_FIELDVALUE(DHP_TXN_NODE_KEY_LINK, "Node Key Link")
+            CASE_FIELDVALUE(DHP_TXN_VOTING_KEY_LINK, "Voting Key Link")
+            CASE_FIELDVALUE(DHP_TXN_VRF_KEY_LINK, "Vrf Key Link")
+            CASE_FIELDVALUE(DHP_TXN_AGGREGATE_COMPLETE, "Aggregate Complete")
+            CASE_FIELDVALUE(DHP_TXN_AGGREGATE_BONDED, "Aggregate Bonded")
+            CASE_FIELDVALUE(DHP_TXN_FUND_LOCK, "Funds Lock")
+            CASE_FIELDVALUE(DHP_TXN_SECRET_LOCK, "Secret Lock")
+            CASE_FIELDVALUE(DHP_TXN_SECRET_PROOF, "Secret Proof")
             default:
                 SNPRINTF(dst, "%s", "Unknown");
         }
@@ -180,7 +180,7 @@ static void uint16_formatter(const field_t *field, char *dst) {
 
 static void uint32_formatter(const field_t *field, char *dst) {
     uint32_t value = read_uint32(field->data);
-    if ((field->id == XYM_UINT32_VKL_START_POINT) || (field->id == XYM_UINT32_VKL_END_POINT)) {
+    if ((field->id == DHP_UINT32_VKL_START_POINT) || (field->id == DHP_UINT32_VKL_END_POINT)) {
         SNPRINTF(dst, "%d", value);
     }
 }
@@ -190,7 +190,7 @@ static void hash_formatter(const field_t *field, char *dst) {
 }
 
 static void uint64_formatter(const field_t *field, char *dst) {
-    if (field->id == XYM_UINT64_DURATION) {
+    if (field->id == DHP_UINT64_DURATION) {
         uint64_t duration = read_uint64(field->data);
         if (duration == 0) {
             SNPRINTF(dst, "%s", "Unlimited");
@@ -200,15 +200,15 @@ static void uint64_formatter(const field_t *field, char *dst) {
             uint8_t min = (duration % 120) / 2;
             SNPRINTF(dst, "%d%s%d%s%d%s", day, "d ", hour, "h ", min, "m");
         }
-    } else if (field->id == XYM_UINT64_MSC_AMOUNT) {
-        xym_print_amount(read_uint64(field->data), 0, "", dst, MAX_FIELD_LEN);
+    } else if (field->id == DHP_UINT64_MSC_AMOUNT) {
+        dhp_print_amount(read_uint64(field->data), 0, "", dst, MAX_FIELD_LEN);
     } else {
         snprintf_hex(dst, MAX_FIELD_LEN, field->data, field->length, 1);
     }
 }
 
 static void address_formatter(const field_t *field, char *dst) {
-    base32_encode(field->data, XYM_ADDRESS_LENGTH, dst, XYM_PRETTY_ADDRESS_LENGTH);
+    base32_encode(field->data, DHP_ADDRESS_LENGTH, dst, DHP_PRETTY_ADDRESS_LENGTH);
     dst[39] = '\0';
 }
 
@@ -216,17 +216,17 @@ static void mosaic_formatter(const field_t *field, char *dst) {
     if (field->dataType == STI_MOSAIC_CURRENCY) {
         const mosaic_t* value = (const mosaic_t *)field->data;
         bool is_using_mainnet = (transactionContext.bip32Path[1] & 0x7FFFFFFF) == 4343 ? true : false;
-        if ((value->mosaicId == (is_using_mainnet ? XYM_MAINNET_MOSAIC_ID : XYM_TESTNET_MOSAIC_ID)) || field->id == XYM_MOSAIC_HL_QUANTITY) {
-            xym_print_amount(value->amount, 6, "XYM", dst, MAX_FIELD_LEN);
+        if ((value->mosaicId == (is_using_mainnet ? DHP_MAINNET_MOSAIC_ID : DHP_TESTNET_MOSAIC_ID)) || field->id == DHP_MOSAIC_HL_QUANTITY) {
+            dhp_print_amount(value->amount, 6, "DHP", dst, MAX_FIELD_LEN);
         } else {
             snprintf_mosaic(dst, MAX_FIELD_LEN, value, "micro");
         }
     }
 }
 
-static void xym_formatter(const field_t *field, char *dst) {
-    if (field->dataType == STI_XYM) {
-        xym_print_amount(read_uint64(field->data), 6, "XYM", dst, MAX_FIELD_LEN);
+static void dhp_formatter(const field_t *field, char *dst) {
+    if (field->dataType == STI_DHP) {
+        dhp_print_amount(read_uint64(field->data), 6, "DHP", dst, MAX_FIELD_LEN);
     }
 }
 
@@ -249,9 +249,9 @@ static void msg_formatter(const field_t *field, char *dst) {
 }
 
 static void string_formatter(const field_t *field, char *dst) {
-    if (field->id == XYM_UNKNOWN_MOSAIC) {
+    if (field->id == DHP_UNKNOWN_MOSAIC) {
         SNPRINTF(dst, "%s", "Divisibility and levy cannot be shown");
-    } else if (field->id == XYM_STR_RECIPIENT_ADDRESS) {
+    } else if (field->id == DHP_STR_RECIPIENT_ADDRESS) {
         SNPRINTF(dst, "%s", "alias to a namespace");
     } else if (field->length > MAX_FIELD_LEN) {
         snprintf_ascii(dst, MAX_FIELD_LEN, field->data, MAX_FIELD_LEN - 1);
@@ -285,8 +285,8 @@ static field_formatter_t get_formatter(const field_t *field) {
             return address_formatter;
         case STI_MOSAIC_CURRENCY:
             return mosaic_formatter;
-        case STI_XYM:
-            return xym_formatter;
+        case STI_DHP:
+            return dhp_formatter;
         case STI_MESSAGE:
             return msg_formatter;
         case STI_HEX_MESSAGE:

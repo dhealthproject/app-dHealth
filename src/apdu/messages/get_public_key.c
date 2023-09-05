@@ -1,7 +1,7 @@
 /*******************************************************************************
-*    XYM Wallet
+*    DHP Wallet
 *    (c) 2020 Ledger
-*    (c) 2020 FDS
+*    (c) 2023 dHealth
 *
 *  Licensed under the Apache License, Version 2.0 (the "License");
 *  you may not use this file except in compliance with the License.
@@ -17,14 +17,14 @@
 ********************************************************************************/
 #include "get_public_key.h"
 #include "apdu/global.h"
-#include "xym/xym_helpers.h"
+#include "dhp/dhp_helpers.h"
 #include "ui/main/idle_menu.h"
 #include "ui/address/address_ui.h"
 #include "types.h"
 #include "io.h"
 #include "crypto.h"
 
-uint8_t G_xym_public_key[ XYM_PUBLIC_KEY_LENGTH ];
+uint8_t G_dhp_public_key[ DHP_PUBLIC_KEY_LENGTH ];
 
 typedef struct 
 {
@@ -42,9 +42,9 @@ typedef struct
 int send_public_key()
 {
     size_t tx = 0;
-    G_io_apdu_buffer[tx++] = XYM_PUBLIC_KEY_LENGTH;
-    memcpy(G_io_apdu_buffer + tx, G_xym_public_key, XYM_PUBLIC_KEY_LENGTH);
-    tx += XYM_PUBLIC_KEY_LENGTH;
+    G_io_apdu_buffer[tx++] = DHP_PUBLIC_KEY_LENGTH;
+    memcpy(G_io_apdu_buffer + tx, G_dhp_public_key, DHP_PUBLIC_KEY_LENGTH);
+    tx += DHP_PUBLIC_KEY_LENGTH;
     buffer_t buffer = { G_io_apdu_buffer, tx, 0 };
 
     return io_send_response( &buffer, OK );
@@ -79,7 +79,7 @@ void on_address_rejected()
 ApduResponse_t extract_parameters( const uint8_t p1, const uint8_t p2, uint8_t* data, const uint8_t dataLength, KeyData_t* keyData )
 {
     // check length of data is correct
-    if( dataLength != XYM_PKG_GETPUBLICKEY_LENGTH )
+    if( dataLength != DHP_PKG_GETPUBLICKEY_LENGTH )
     {
         return INVALID_PKG_KEY_LENGTH;
     }
@@ -119,7 +119,7 @@ ApduResponse_t extract_parameters( const uint8_t p1, const uint8_t p2, uint8_t* 
  * Calculates and returns a public key which corresponds to bip32 path in 'keyData'
  * 
  */
-void get_public_key( KeyData_t* keyData, uint8_t key[ XYM_PUBLIC_KEY_LENGTH ], char address[ XYM_PRETTY_ADDRESS_LENGTH+1 ] )
+void get_public_key( KeyData_t* keyData, uint8_t key[ DHP_PUBLIC_KEY_LENGTH ], char address[ DHP_PRETTY_ADDRESS_LENGTH+1 ] )
 {
     cx_ecfp_private_key_t privateKey;
 
@@ -144,17 +144,17 @@ void get_public_key( KeyData_t* keyData, uint8_t key[ XYM_PUBLIC_KEY_LENGTH ], c
             // ensure a I/O channel is not timing out
             io_seproxyhal_io_heartbeat(); 
 
-            // convert key to xym format
-            xym_public_key_and_address( &publicKey,
+            // convert key to dhp format
+            dhp_public_key_and_address( &publicKey,
                                          keyData->networkType,
                                          key,
                                          address,
-                                         XYM_PRETTY_ADDRESS_LENGTH + 1 );
+                                         DHP_PRETTY_ADDRESS_LENGTH + 1 );
 
             // ensure a I/O channel is not timing out
             io_seproxyhal_io_heartbeat(); 
 
-            address[XYM_PRETTY_ADDRESS_LENGTH] = '\0';
+            address[DHP_PRETTY_ADDRESS_LENGTH] = '\0';
         }
         CATCH_OTHER(e) 
         {
@@ -180,8 +180,8 @@ int handle_public_key( const ApduCommand_t* cmd )
     }
 
     // get the public key
-    char address[ XYM_PRETTY_ADDRESS_LENGTH+1 ];
-    get_public_key( &keyData, G_xym_public_key, address );
+    char address[ DHP_PRETTY_ADDRESS_LENGTH+1 ];
+    get_public_key( &keyData, G_dhp_public_key, address );
 
     // send public key or ask for user confirmation
     if( !keyData.confirmTransaction ) 

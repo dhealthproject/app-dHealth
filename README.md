@@ -1,5 +1,5 @@
 # symbol-ledger-app
-XYM wallet application for Nano S.
+DHP wallet application for Nano S.
 
 See the [Ledger's documentation](https://ledger.readthedocs.io/en/latest/) to get started.
 

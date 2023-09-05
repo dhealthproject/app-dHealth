@@ -60,7 +60,7 @@ class ErrorType:
     INTERNAL_ERROR = 0x6A83
 
 
-class SymbolClient:
+class dHealthClient:
     def __init__(self, backend: BackendInterface):
         self._backend = backend
 

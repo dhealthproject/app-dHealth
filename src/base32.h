@@ -1,7 +1,7 @@
 /*******************************************************************************
- *   XYM Wallet
+ *   DHP Wallet
  *   (c) 2018 Ledger
- *   (c) 2020 FDS
+ *   (c) 2023 dHealth
  *
  *  adapted from https://stash.forgerock.org/projects/OPENAM/repos/forgerock-authenticator-ios/browse/ForgeRock-Authenticator/base32.h
  *

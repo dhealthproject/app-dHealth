@@ -1,7 +1,7 @@
 /*******************************************************************************
-*   XYM Wallet
+*   DHP Wallet
 *   (c) 2017 Ledger
-*   (c) 2020 FDS
+*   (c) 2023 dHealth
 *
 *  Licensed under the Apache License, Version 2.0 (the "License");
 *  you may not use this file except in compliance with the License.
@@ -34,7 +34,7 @@ ux_state_t G_ux;
 bolos_ux_params_t G_ux_params;
 
 
-void xym_main(void) 
+void dhp_main(void)
 {
     io_init();
 
@@ -195,7 +195,7 @@ __attribute__((section(".boot"))) int main(void) {
                 BLE_power(1, NULL);
 #endif // HAVE_BLE
 
-                xym_main();
+                dhp_main();
             }
             CATCH(EXCEPTION_IO_RESET) {
                 CLOSE_TRY;

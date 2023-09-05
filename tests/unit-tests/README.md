@@ -1,6 +1,6 @@
 # Tests
 
-Minimal tests for the Symbol application.
+Minimal tests for the dHealth application.
 
 ## Build
 

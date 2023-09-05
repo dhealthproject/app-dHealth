@@ -1,6 +1,6 @@
 /*******************************************************************************
-*   XYM Wallet
-*   (c) 2020 FDS
+*   DHP Wallet
+*   (c) 2023 FDS
 *
 *  Licensed under the Apache License, Version 2.0 (the "License");
 *  you may not use this file except in compliance with the License.
@@ -20,9 +20,9 @@
 #include <ux.h>
 #include "common.h"
 #include "ui/main/idle_menu.h"
-#include "xym/format/readers.h"
-#include "xym/format/fields.h"
-#include "xym/format/format.h"
+#include "dhp/format/readers.h"
+#include "dhp/format/fields.h"
+#include "dhp/format/format.h"
 #include "glyphs.h"
 
 #ifdef HAVE_NBGL
@@ -149,7 +149,7 @@ static void review_continue(void) {
     pairList.callback = get_review_pair;
     pairList.startIndex = 0;
 
-    infoLongPress.icon = &C_stax_app_symbol_64px;
+    infoLongPress.icon = &C_stax_app_dHealth_64px;
     infoLongPress.text = "Sign transaction";
     infoLongPress.longPressText = "Hold to sign";
 
@@ -173,7 +173,7 @@ void display_review_menu(fields_array_t *transactionParam, result_action_t callb
 
     ux_flow_init(0, ux_review_flow, NULL);
 #else // HAVE_BAGL
-    nbgl_useCaseReviewStart(&C_stax_app_symbol_64px,
+    nbgl_useCaseReviewStart(&C_stax_app_dHealth_64px,
                             "Review transaction",
                             NULL,
                             "Reject transaction",

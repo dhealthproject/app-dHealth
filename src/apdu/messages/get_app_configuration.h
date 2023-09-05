@@ -1,7 +1,7 @@
 /*******************************************************************************
-*    XYM Wallet
+*    DHP Wallet
 *    (c) 2017 Ledger
-*    (c) 2020 FDS
+*    (c) 2023 dHealth
 *
 *   Licensed under the Apache License, Version 2.0 (the "License");
 *  you may not use this file except in compliance with the License.
@@ -15,11 +15,11 @@
 *  See the License for the specific language governing permissions and
 *  limitations under the License.
 ********************************************************************************/
-#ifndef LEDGER_APP_XYM_GETAPPCONFIGURATION_H
-#define LEDGER_APP_XYM_GETAPPCONFIGURATION_H
+#ifndef LEDGER_APP_DHP_GETAPPCONFIGURATION_H
+#define LEDGER_APP_DHP_GETAPPCONFIGURATION_H
 
 #include <stdint.h>
 
 int handle_app_configuration( );
 
-#endif //LEDGER_APP_XYM_GETAPPCONFIGURATION_H
+#endif //LEDGER_APP_DHP_GETAPPCONFIGURATION_H

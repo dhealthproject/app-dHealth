@@ -2,11 +2,11 @@ from ragger.backend import SpeculosBackend
 from ragger.backend.interface import RaisePolicy
 from ragger.navigator import NavInsID, NavIns
 
-from apps.symbol import SymbolClient, ErrorType
+from apps.dHealth import dHealthClient, ErrorType
 from utils import ROOT_SCREENSHOT_PATH
 
-# Proposed XYM derivation paths for tests ###
-SYMBOL_PATH = "m/44'/4343'/0'/0'/0'"
+# Proposed DHP derivation paths for tests ###
+DHEALTH_PATH = "m/44'/4343'/0'/0'/0'"
 
 SPECULOS_EXPECTED_PUBLIC_KEY = "73f0bf90d39d1d0a3ec03740eec95c12"\
                                "7a82a20bf07f6840462125a94a42df1e"
@@ -19,15 +19,15 @@ def check_get_public_key_resp(backend, public_key):
 
 
 def test_get_public_key_non_confirm(backend):
-    client = SymbolClient(backend)
-    response = client.send_get_public_key_non_confirm(SYMBOL_PATH).data
+    client = dHealthClient(backend)
+    response = client.send_get_public_key_non_confirm(DHEALTH_PATH).data
     public_key = client.parse_get_public_key_response(response)
     check_get_public_key_resp(backend, public_key)
 
 
 def test_get_public_key_confirm_accepted(firmware, backend, navigator, test_name):
-    client = SymbolClient(backend)
-    with client.send_async_get_public_key_confirm(SYMBOL_PATH):
+    client = dHealthClient(backend)
+    with client.send_async_get_public_key_confirm(DHEALTH_PATH):
         if firmware.device.startswith("nano"):
             navigator.navigate_until_text_and_compare(NavInsID.RIGHT_CLICK,
                                                       [NavInsID.BOTH_CLICK],
@@ -52,10 +52,10 @@ def test_get_public_key_confirm_accepted(firmware, backend, navigator, test_name
 
 # In this test we check that the GET_PUBLIC_KEY in confirmation mode replies an error if the user refuses
 def test_get_public_key_confirm_refused(firmware, backend, navigator, test_name):
-    client = SymbolClient(backend)
+    client = dHealthClient(backend)
 
     if firmware.device.startswith("nano"):
-        with client.send_async_get_public_key_confirm(SYMBOL_PATH):
+        with client.send_async_get_public_key_confirm(DHEALTH_PATH):
             backend.raise_policy = RaisePolicy.RAISE_NOTHING
             navigator.navigate_until_text_and_compare(NavInsID.RIGHT_CLICK,
                                                       [NavInsID.BOTH_CLICK],
@@ -78,7 +78,7 @@ def test_get_public_key_confirm_refused(firmware, backend, navigator, test_name)
             ]
         ]
         for i, instructions in enumerate(instructions_set):
-            with client.send_async_get_public_key_confirm(SYMBOL_PATH):
+            with client.send_async_get_public_key_confirm(DHEALTH_PATH):
                 backend.raise_policy = RaisePolicy.RAISE_NOTHING
                 navigator.navigate_and_compare(ROOT_SCREENSHOT_PATH,
                                                test_name + f"/part{i}",

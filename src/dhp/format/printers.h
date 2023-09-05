@@ -1,7 +1,7 @@
 /*******************************************************************************
-*   XYM Wallet
+*   DHP Wallet
 *   (c) 2017 Ledger
-*   (c) 2020 FDS
+*   (c) 2023 dHealth
 *
 *  Licensed under the Apache License, Version 2.0 (the "License");
 *  you may not use this file except in compliance with the License.
@@ -15,11 +15,11 @@
 *  See the License for the specific language governing permissions and
 *  limitations under the License.
 ********************************************************************************/
-#ifndef LEDGER_APP_XYM_PRINTERS_H
-#define LEDGER_APP_XYM_PRINTERS_H
+#ifndef LEDGER_APP_DHP_PRINTERS_H
+#define LEDGER_APP_DHP_PRINTERS_H
 
 #include <stdint.h>
-#include "parse/xym_parse.h"
+#include "parse/dhp_parse.h"
 
 
 enum _parser_error {
@@ -35,4 +35,4 @@ int snprintf_ascii(char *dst, uint16_t maxLen, const uint8_t *src, uint16_t data
 int snprintf_number(char *dst, uint16_t maxLen, uint64_t value);
 int snprintf_mosaic(char *dst, uint16_t maxLen, const mosaic_t *mosaic, char *asset);
 
-#endif //LEDGER_APP_XYM_PRINTERS_H
+#endif //LEDGER_APP_DHP_PRINTERS_H

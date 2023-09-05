@@ -1,6 +1,6 @@
 /*******************************************************************************
-*    XYM Wallet
-*    (c) 2020 FDS
+*    DHP Wallet
+*    (c) 2023 dHealth
 *
 *  Licensed under the Apache License, Version 2.0 (the "License");
 *  you may not use this file except in compliance with the License.
@@ -15,14 +15,14 @@
 *  limitations under the License.
 ********************************************************************************/
 
-#include "xym_parse.h"
+#include "dhp_parse.h"
 #include "apdu/global.h"
-#include "xym/format/printers.h"
+#include "dhp/format/printers.h"
 
 #pragma pack(push, 1)
 
 typedef struct {
-    uint8_t recipientAddress[XYM_ADDRESS_LENGTH];
+    uint8_t recipientAddress[DHP_ADDRESS_LENGTH];
     uint16_t messageSize;
     uint8_t mosaicsCount;
     uint32_t reserved1;
@@ -45,7 +45,7 @@ typedef struct {
 typedef struct {
     uint32_t size;
     uint32_t reserve1;
-    uint8_t signerPublicKey[XYM_PUBLIC_KEY_LENGTH];
+    uint8_t signerPublicKey[DHP_PUBLIC_KEY_LENGTH];
     uint32_t reserve2;
     uint8_t version;
     uint8_t network;
@@ -53,7 +53,7 @@ typedef struct {
 } inner_tx_header_t;
 
 typedef struct {
-    uint8_t transactionHash[XYM_TRANSACTION_HASH_LENGTH];
+    uint8_t transactionHash[DHP_TRANSACTION_HASH_LENGTH];
     uint32_t payloadSize;
     uint32_t reserse;
 } aggregate_txn_t;
@@ -66,7 +66,7 @@ typedef struct {
 } ns_header_t;
 
 typedef struct {
-    uint8_t address[XYM_ADDRESS_LENGTH];
+    uint8_t address[DHP_ADDRESS_LENGTH];
     uint64_t metadataKey;
 } metadata_header_1_t;
 
@@ -88,7 +88,7 @@ typedef struct {
 
 typedef struct {
     uint64_t namespaceId;
-    uint8_t address[XYM_ADDRESS_LENGTH];
+    uint8_t address[DHP_ADDRESS_LENGTH];
     uint8_t aliasAction;
 } aa_header_t;
 
@@ -106,12 +106,12 @@ typedef struct {
 } ar_header_t;
 
 typedef struct {
-    uint8_t linkedPublicKey[XYM_PUBLIC_KEY_LENGTH];
+    uint8_t linkedPublicKey[DHP_PUBLIC_KEY_LENGTH];
     uint8_t linkAction;
 } key_link_header_t;
 
 typedef struct {
-    uint8_t linkedPublicKey[XYM_PUBLIC_KEY_LENGTH];
+    uint8_t linkedPublicKey[DHP_PUBLIC_KEY_LENGTH];
     uint32_t startPoint;
     uint32_t endPoint;
     uint8_t linkAction;
@@ -128,11 +128,11 @@ typedef struct {
 typedef struct {
     mosaic_t mosaic;
     uint64_t blockDuration;
-    uint8_t aggregateBondedHash[XYM_TRANSACTION_HASH_LENGTH];
+    uint8_t aggregateBondedHash[DHP_TRANSACTION_HASH_LENGTH];
 } fl_header_t;
 
 typedef struct {
-    uint8_t transactionHash[XYM_TRANSACTION_HASH_LENGTH];
+    uint8_t transactionHash[DHP_TRANSACTION_HASH_LENGTH];
     uint8_t version;
     uint8_t networkType;
     uint16_t transactionType;
@@ -174,7 +174,7 @@ static int add_new_field( fields_array_t* fields, uint8_t id, uint8_t data_type,
  *      uint64_t maxFee;
  *      uint64_t deadline;
  * 
- *      uint8_t  recipientAddress[ XYM_ADDRESS_LENGTH ];
+ *      uint8_t  recipientAddress[ DHP_ADDRESS_LENGTH ];
  *      uint16_t messageSize;
  *      uint8_t  mosaicsCount;
  *      uint32_t reserved1;
@@ -205,21 +205,21 @@ static int parse_transfer_txn_content( buffer_t* rawTxData, fields_array_t* fiel
 
     if( txn->recipientAddress[0] == MAINNET_NETWORK_TYPE || txn->recipientAddress[0] == TESTNET_NETWORK_TYPE ) 
     {
-        BAIL_IF( add_new_field(fields, XYM_STR_RECIPIENT_ADDRESS, STI_ADDRESS, XYM_ADDRESS_LENGTH, (const uint8_t*) txn->recipientAddress) ); // add recipient address
+        BAIL_IF( add_new_field(fields, DHP_STR_RECIPIENT_ADDRESS, STI_ADDRESS, DHP_ADDRESS_LENGTH, (const uint8_t*) txn->recipientAddress) ); // add recipient address
     } 
     else 
     {        
-        BAIL_IF( add_new_field(fields, XYM_STR_RECIPIENT_ADDRESS, STI_STR,    0,                (const uint8_t*) &txn->recipientAddress[0]) ); // add recipient alias to namespace notification
-        BAIL_IF( add_new_field(fields, XYM_UINT64_NS_ID,          STI_UINT64, sizeof(uint64_t), (const uint8_t*) &txn->recipientAddress[1]) ); // add alias namespace ID
+        BAIL_IF( add_new_field(fields, DHP_STR_RECIPIENT_ADDRESS, STI_STR,    0,                (const uint8_t*) &txn->recipientAddress[0]) ); // add recipient alias to namespace notification
+        BAIL_IF( add_new_field(fields, DHP_UINT64_NS_ID,          STI_UINT64, sizeof(uint64_t), (const uint8_t*) &txn->recipientAddress[1]) ); // add alias namespace ID
     }
     
     if( txn->mosaicsCount > 1 )
     {
-        BAIL_IF( add_new_field(fields, XYM_UINT8_MOSAIC_COUNT, STI_UINT8, sizeof(uint8_t), (const uint8_t*) &txn->mosaicsCount) ); // add sent mosaic count field
+        BAIL_IF( add_new_field(fields, DHP_UINT8_MOSAIC_COUNT, STI_UINT8, sizeof(uint8_t), (const uint8_t*) &txn->mosaicsCount) ); // add sent mosaic count field
     }
 
     const bool     is_using_mainnet = (transactionContext.bip32Path[1] & 0x7FFFFFFF) == 4343; // checks if the coin_type field of bip32 path is 'symbol'
-    const uint64_t mosaic_net_id    = (is_using_mainnet ? XYM_MAINNET_MOSAIC_ID : XYM_TESTNET_MOSAIC_ID);
+    const uint64_t mosaic_net_id    = (is_using_mainnet ? DHP_MAINNET_MOSAIC_ID : DHP_TESTNET_MOSAIC_ID);
 
     // Show mosaics amounts
     for( uint8_t i = 0; i < txn->mosaicsCount; i++ ) 
@@ -231,44 +231,44 @@ static int parse_transfer_txn_content( buffer_t* rawTxData, fields_array_t* fiel
         if( txn->mosaicsCount == 1 && mosaic->mosaicId != mosaic_net_id ) 
         {
             // Show sent mosaic count field (only 1 unknown mosaic)
-            BAIL_IF( add_new_field(fields, XYM_UINT8_MOSAIC_COUNT, STI_UINT8, sizeof(uint8_t), (const uint8_t*) &txn->mosaicsCount) ); 
+            BAIL_IF( add_new_field(fields, DHP_UINT8_MOSAIC_COUNT, STI_UINT8, sizeof(uint8_t), (const uint8_t*) &txn->mosaicsCount) ); 
         }
 
         if( mosaic->mosaicId != mosaic_net_id )
         {            
-            BAIL_IF( add_new_field(fields, XYM_UNKNOWN_MOSAIC, STI_STR, 0, (const uint8_t*) mosaic) ); // Unknow mosaic notification
+            BAIL_IF( add_new_field(fields, DHP_UNKNOWN_MOSAIC, STI_STR, 0, (const uint8_t*) mosaic) ); // Unknow mosaic notification
         }
 
-        BAIL_IF( add_new_field(fields, XYM_MOSAIC_AMOUNT, STI_MOSAIC_CURRENCY, sizeof(mosaic_t), (const uint8_t*) mosaic) );
+        BAIL_IF( add_new_field(fields, DHP_MOSAIC_AMOUNT, STI_MOSAIC_CURRENCY, sizeof(mosaic_t), (const uint8_t*) mosaic) );
     }
 
     if( txn->messageSize == 0 ) 
     {
         // Show Empty Message
-        BAIL_IF(add_new_field(fields, XYM_STR_TXN_MESSAGE, STI_MESSAGE, txn->messageSize, (const uint8_t*) &txn->messageSize));
+        BAIL_IF(add_new_field(fields, DHP_STR_TXN_MESSAGE, STI_MESSAGE, txn->messageSize, (const uint8_t*) &txn->messageSize));
     }
     else 
     {
         // first byte of message is the message type
         if( !buffer_can_read(rawTxData, sizeof(uint8_t)) ) { return E_INVALID_DATA; }
         const uint8_t* msgType = buffer_offset_ptr( rawTxData );
-        BAIL_IF(add_new_field(fields, XYM_UINT8_TXN_MESSAGE_TYPE, STI_UINT8, sizeof(uint8_t), msgType)); // Show Message Type
+        BAIL_IF(add_new_field(fields, DHP_UINT8_TXN_MESSAGE_TYPE, STI_UINT8, sizeof(uint8_t), msgType)); // Show Message Type
 
-        if (*msgType == XYM_PERSISTENT_DELEGATED_HARVESTING) // TODO: just do one read in a new buffer_t above, and use that below, instead of doing multiple seeks
+        if (*msgType == DHP_PERSISTENT_DELEGATED_HARVESTING) // TODO: just do one read in a new buffer_t above, and use that below, instead of doing multiple seeks
         {
             // Show persistent harvesting delegation message
         #if defined(TARGET_NANOX) || defined(TARGET_NANOS2)
-            BAIL_IF( add_new_field(fields, XYM_STR_TXN_HARVESTING, STI_HEX_MESSAGE, txn->messageSize,      buffer_offset_ptr_and_seek( rawTxData, txn->messageSize)) );
+            BAIL_IF( add_new_field(fields, DHP_STR_TXN_HARVESTING, STI_HEX_MESSAGE, txn->messageSize,      buffer_offset_ptr_and_seek( rawTxData, txn->messageSize)) );
         #elif defined(TARGET_NANOS)
-            BAIL_IF( add_new_field(fields, XYM_STR_TXN_HARVESTING_1, STI_HEX_MESSAGE, MAX_FIELD_LEN/2 - 1,                  buffer_offset_ptr_and_seek( rawTxData, MAX_FIELD_LEN/2 - 1)) ); 
-            BAIL_IF( add_new_field(fields, XYM_STR_TXN_HARVESTING_2, STI_HEX_MESSAGE, MAX_FIELD_LEN/2 - 1,                  buffer_offset_ptr_and_seek( rawTxData, MAX_FIELD_LEN/2 - 1)) ); 
-            BAIL_IF( add_new_field(fields, XYM_STR_TXN_HARVESTING_3, STI_HEX_MESSAGE, txn->messageSize - MAX_FIELD_LEN + 2, buffer_offset_ptr_and_seek( rawTxData, txn->messageSize - MAX_FIELD_LEN + 2)) ); 
+            BAIL_IF( add_new_field(fields, DHP_STR_TXN_HARVESTING_1, STI_HEX_MESSAGE, MAX_FIELD_LEN/2 - 1,                  buffer_offset_ptr_and_seek( rawTxData, MAX_FIELD_LEN/2 - 1)) ); 
+            BAIL_IF( add_new_field(fields, DHP_STR_TXN_HARVESTING_2, STI_HEX_MESSAGE, MAX_FIELD_LEN/2 - 1,                  buffer_offset_ptr_and_seek( rawTxData, MAX_FIELD_LEN/2 - 1)) ); 
+            BAIL_IF( add_new_field(fields, DHP_STR_TXN_HARVESTING_3, STI_HEX_MESSAGE, txn->messageSize - MAX_FIELD_LEN + 2, buffer_offset_ptr_and_seek( rawTxData, txn->messageSize - MAX_FIELD_LEN + 2)) ); 
         #endif
         }
         else 
         {
             if( !buffer_seek(rawTxData, 1) ){ return E_NOT_ENOUGH_DATA; } // Message type            
-            BAIL_IF( add_new_field(fields, XYM_STR_TXN_MESSAGE, STI_MESSAGE, txn->messageSize - 1, buffer_offset_ptr_and_seek( rawTxData, txn->messageSize - 1)) ); // Show Message in plain text
+            BAIL_IF( add_new_field(fields, DHP_STR_TXN_MESSAGE, STI_MESSAGE, txn->messageSize - 1, buffer_offset_ptr_and_seek( rawTxData, txn->messageSize - 1)) ); // Show Message in plain text
         }
     }
 
@@ -318,12 +318,12 @@ static int parse_mosaic_definition_txn_content( buffer_t* rawTxData, fields_arra
     const mosaic_definition_data_t *txn = (const mosaic_definition_data_t*) buffer_offset_ptr_and_seek( rawTxData, sizeof(mosaic_definition_data_t) ); // Read data and security check
     if( !txn ) { return E_NOT_ENOUGH_DATA; }
 
-    BAIL_IF( add_new_field(fields, XYM_UINT64_MOSAIC_ID,       STI_UINT64, sizeof(uint64_t), (const uint8_t*) &txn->mosaicId)     ); // Show mosaic id
-    BAIL_IF( add_new_field(fields, XYM_UINT8_MD_DIV,           STI_UINT8,  sizeof(uint8_t),  (const uint8_t*) &txn->divisibility) ); // Show mosaic divisibility
-    BAIL_IF( add_new_field(fields, XYM_UINT64_DURATION,        STI_UINT64, sizeof(uint64_t), (const uint8_t*) &txn->duration)     ); // Show duration
-    BAIL_IF( add_new_field(fields, XYM_UINT8_MD_TRANS_FLAG,    STI_UINT8,  sizeof(uint8_t),  (const uint8_t*) &txn->flags)        ); // Show mosaic flag (Transferable)
-    BAIL_IF( add_new_field(fields, XYM_UINT8_MD_SUPPLY_FLAG,   STI_UINT8,  sizeof(uint8_t),  (const uint8_t*) &txn->flags)        ); // Show mosaic flag (Supply mutable)
-    BAIL_IF( add_new_field(fields, XYM_UINT8_MD_RESTRICT_FLAG, STI_UINT8,  sizeof(uint8_t),  (const uint8_t*) &txn->flags)        ); // Show mosaic flag (Restrictable)
+    BAIL_IF( add_new_field(fields, DHP_UINT64_MOSAIC_ID,       STI_UINT64, sizeof(uint64_t), (const uint8_t*) &txn->mosaicId)     ); // Show mosaic id
+    BAIL_IF( add_new_field(fields, DHP_UINT8_MD_DIV,           STI_UINT8,  sizeof(uint8_t),  (const uint8_t*) &txn->divisibility) ); // Show mosaic divisibility
+    BAIL_IF( add_new_field(fields, DHP_UINT64_DURATION,        STI_UINT64, sizeof(uint64_t), (const uint8_t*) &txn->duration)     ); // Show duration
+    BAIL_IF( add_new_field(fields, DHP_UINT8_MD_TRANS_FLAG,    STI_UINT8,  sizeof(uint8_t),  (const uint8_t*) &txn->flags)        ); // Show mosaic flag (Transferable)
+    BAIL_IF( add_new_field(fields, DHP_UINT8_MD_SUPPLY_FLAG,   STI_UINT8,  sizeof(uint8_t),  (const uint8_t*) &txn->flags)        ); // Show mosaic flag (Supply mutable)
+    BAIL_IF( add_new_field(fields, DHP_UINT8_MD_RESTRICT_FLAG, STI_UINT8,  sizeof(uint8_t),  (const uint8_t*) &txn->flags)        ); // Show mosaic flag (Restrictable)
 
     return E_SUCCESS;
 }
@@ -360,9 +360,9 @@ static int parse_mosaic_supply_change_txn_content( buffer_t* rawTxData, fields_a
     const mosaic_supply_change_data_t *txn = (const mosaic_supply_change_data_t*) buffer_offset_ptr_and_seek( rawTxData, sizeof(mosaic_supply_change_data_t) );
     if( !txn ) { return E_NOT_ENOUGH_DATA; }
    
-    BAIL_IF( add_new_field(fields, XYM_UINT64_MOSAIC_ID,  STI_UINT64, sizeof(uint64_t), (const uint8_t*) &txn->mosaic.mosaicId) ); // Show mosaic id
-    BAIL_IF( add_new_field(fields, XYM_UINT8_MSC_ACTION,  STI_UINT8,  sizeof(uint8_t),  (const uint8_t*) &txn->action)          ); // Show supply change action
-    BAIL_IF( add_new_field(fields, XYM_UINT64_MSC_AMOUNT, STI_UINT64, sizeof(mosaic_t), (const uint8_t*) &txn->mosaic.amount)   ); // Show amount
+    BAIL_IF( add_new_field(fields, DHP_UINT64_MOSAIC_ID,  STI_UINT64, sizeof(uint64_t), (const uint8_t*) &txn->mosaic.mosaicId) ); // Show mosaic id
+    BAIL_IF( add_new_field(fields, DHP_UINT8_MSC_ACTION,  STI_UINT8,  sizeof(uint8_t),  (const uint8_t*) &txn->action)          ); // Show supply change action
+    BAIL_IF( add_new_field(fields, DHP_UINT64_MSC_AMOUNT, STI_UINT64, sizeof(mosaic_t), (const uint8_t*) &txn->mosaic.amount)   ); // Show amount
     
     return E_SUCCESS;
 }
@@ -411,28 +411,28 @@ static int parse_multisig_account_modification_txn_content( buffer_t* rawTxData,
     if( !txn ) { return E_NOT_ENOUGH_DATA; }
 
     // Show address additions count
-    BAIL_IF(add_new_field(fields, XYM_UINT8_MAM_ADD_COUNT, STI_UINT8, sizeof(uint8_t), (const uint8_t*) &txn->addressAdditionsCount)); 
+    BAIL_IF(add_new_field(fields, DHP_UINT8_MAM_ADD_COUNT, STI_UINT8, sizeof(uint8_t), (const uint8_t*) &txn->addressAdditionsCount)); 
 
     // Show list of addition address
     for( uint8_t i = 0; i < txn->addressAdditionsCount; i++ )
     {
-        BAIL_IF( add_new_field(fields, XYM_STR_ADDRESS, STI_ADDRESS, XYM_ADDRESS_LENGTH, buffer_offset_ptr_and_seek(rawTxData, XYM_ADDRESS_LENGTH)) );
+        BAIL_IF( add_new_field(fields, DHP_STR_ADDRESS, STI_ADDRESS, DHP_ADDRESS_LENGTH, buffer_offset_ptr_and_seek(rawTxData, DHP_ADDRESS_LENGTH)) );
     }
     
     // Show address deletions count
-    BAIL_IF( add_new_field(fields, XYM_UINT8_MAM_DEL_COUNT, STI_UINT8, sizeof(uint8_t), (const uint8_t*) &txn->addressDeletionsCount) );
+    BAIL_IF( add_new_field(fields, DHP_UINT8_MAM_DEL_COUNT, STI_UINT8, sizeof(uint8_t), (const uint8_t*) &txn->addressDeletionsCount) );
 
     // Show list of addition address
     for (uint8_t i = 0; i < txn->addressDeletionsCount; i++) 
     {
-        BAIL_IF(add_new_field(fields, XYM_STR_ADDRESS, STI_ADDRESS, XYM_ADDRESS_LENGTH, buffer_offset_ptr_and_seek(rawTxData, XYM_ADDRESS_LENGTH))); // Read data and security check
+        BAIL_IF(add_new_field(fields, DHP_STR_ADDRESS, STI_ADDRESS, DHP_ADDRESS_LENGTH, buffer_offset_ptr_and_seek(rawTxData, DHP_ADDRESS_LENGTH))); // Read data and security check
     }
     
     // Show min approval delta
-    BAIL_IF(add_new_field(fields, XYM_INT8_MAM_APPROVAL_DELTA, STI_INT8, sizeof(int8_t), (const uint8_t*) &txn->minApprovalDelta));
+    BAIL_IF(add_new_field(fields, DHP_INT8_MAM_APPROVAL_DELTA, STI_INT8, sizeof(int8_t), (const uint8_t*) &txn->minApprovalDelta));
 
     // Show min removal delta
-    BAIL_IF(add_new_field(fields, XYM_INT8_MAM_REMOVAL_DELTA, STI_INT8, sizeof(int8_t), (const uint8_t*) &txn->minRemovalDelta));
+    BAIL_IF(add_new_field(fields, DHP_INT8_MAM_REMOVAL_DELTA, STI_INT8, sizeof(int8_t), (const uint8_t*) &txn->minRemovalDelta));
     
     return E_SUCCESS;
 }
@@ -477,10 +477,10 @@ static int parse_namespace_registration_txn_content( buffer_t* rawTxData, fields
     if( !namespaceName ) { return E_NOT_ENOUGH_DATA; }
 
     // create fields from extracted data
-    const uint8_t fieldId = ( (txn->registrationType==0) ? XYM_UINT64_DURATION : XYM_UINT64_PARENTID );
+    const uint8_t fieldId = ( (txn->registrationType==0) ? DHP_UINT64_DURATION : DHP_UINT64_PARENTID );
 
-    BAIL_IF( add_new_field(fields, XYM_UINT8_NS_REG_TYPE, STI_UINT8,  sizeof(uint8_t),  (const uint8_t*) &txn->registrationType) ); // namespace reg type
-    BAIL_IF( add_new_field(fields, XYM_STR_NAMESPACE,     STI_STR,    txn->nameSize,                namespaceName)               ); // namespace/sub-namespace name
+    BAIL_IF( add_new_field(fields, DHP_UINT8_NS_REG_TYPE, STI_UINT8,  sizeof(uint8_t),  (const uint8_t*) &txn->registrationType) ); // namespace reg type
+    BAIL_IF( add_new_field(fields, DHP_STR_NAMESPACE,     STI_STR,    txn->nameSize,                namespaceName)               ); // namespace/sub-namespace name
     BAIL_IF( add_new_field(fields, fieldId,               STI_UINT64, sizeof(uint64_t), (const uint8_t*) &txn->duration)         ); // duration/parentID
     
     return E_SUCCESS;
@@ -498,7 +498,7 @@ static int parse_namespace_registration_txn_content( buffer_t* rawTxData, fields
  *      uint64_t maxFee;    ///< (only if not multisig)
  *      uint64_t deadline;  ///< (only if not multisig)
  * 
- *      uint8_t  address[ XYM_ADDRESS_LENGTH ];
+ *      uint8_t  address[ DHP_ADDRESS_LENGTH ];
  *      uint64_t metadataKey;
  *      int16_t  valueSizeDelta;
  *      uint16_t valueSize;
@@ -523,10 +523,10 @@ static int parse_account_metadata_txn_content( buffer_t* rawTxData, fields_array
     if( !txn ) { return E_NOT_ENOUGH_DATA; }
 
     // create fields from extracted data
-    BAIL_IF( add_new_field(fields, XYM_STR_METADATA_ADDRESS, STI_ADDRESS, XYM_ADDRESS_LENGTH,        (const uint8_t*) &txn->address_data.address)                      ); // Show metadata target address
-    BAIL_IF( add_new_field(fields, XYM_UINT64_METADATA_KEY,  STI_UINT64,  sizeof(uint64_t),          (const uint8_t*) &txn->address_data.metadataKey)                  ); // Show scope metadata key
-    BAIL_IF( add_new_field(fields, XYM_STR_METADATA_VALUE,   STI_MESSAGE, txn->value_data.valueSize, buffer_offset_ptr_and_seek(rawTxData, txn->value_data.valueSize)) ); // Show different value
-    BAIL_IF( add_new_field(fields, XYM_INT16_VALUE_DELTA,    STI_INT16,   sizeof(uint16_t),          (const uint8_t*) &txn->value_data.valueSizeDelta)                 ); // Show value size delta
+    BAIL_IF( add_new_field(fields, DHP_STR_METADATA_ADDRESS, STI_ADDRESS, DHP_ADDRESS_LENGTH,        (const uint8_t*) &txn->address_data.address)                      ); // Show metadata target address
+    BAIL_IF( add_new_field(fields, DHP_UINT64_METADATA_KEY,  STI_UINT64,  sizeof(uint64_t),          (const uint8_t*) &txn->address_data.metadataKey)                  ); // Show scope metadata key
+    BAIL_IF( add_new_field(fields, DHP_STR_METADATA_VALUE,   STI_MESSAGE, txn->value_data.valueSize, buffer_offset_ptr_and_seek(rawTxData, txn->value_data.valueSize)) ); // Show different value
+    BAIL_IF( add_new_field(fields, DHP_INT16_VALUE_DELTA,    STI_INT16,   sizeof(uint16_t),          (const uint8_t*) &txn->value_data.valueSizeDelta)                 ); // Show value size delta
     
     return E_SUCCESS;
 }
@@ -544,7 +544,7 @@ static int parse_account_metadata_txn_content( buffer_t* rawTxData, fields_array
  *      uint64_t maxFee;    ///< (only if not multisig)
  *      uint64_t deadline;  ///< (only if not multisig)
  * 
- *      uint8_t  address[ XYM_ADDRESS_LENGTH ];
+ *      uint8_t  address[ DHP_ADDRESS_LENGTH ];
  *      uint64_t metadataKey;
  *      uint64_t mosaicNamespaceId;
  *      int16_t  valueSizeDelta;
@@ -575,23 +575,23 @@ static int parse_metadata_txn_content( buffer_t* rawTxData, uint8_t id, fields_a
     if( !value ) { return E_NOT_ENOUGH_DATA; }
     
     // create fields from extracted data
-    BAIL_IF( add_new_field(fields, XYM_STR_METADATA_ADDRESS, STI_ADDRESS, XYM_ADDRESS_LENGTH,        (const uint8_t*) &txn->address_data.address)      ); // add metadata target address
+    BAIL_IF( add_new_field(fields, DHP_STR_METADATA_ADDRESS, STI_ADDRESS, DHP_ADDRESS_LENGTH,        (const uint8_t*) &txn->address_data.address)      ); // add metadata target address
     BAIL_IF( add_new_field(fields, id,                       STI_UINT64,  sizeof(uint64_t),          (const uint8_t*) &txn->mosaicNamespaceId)         ); // add target mosaic/namespace id
-    BAIL_IF( add_new_field(fields, XYM_UINT64_METADATA_KEY,  STI_UINT64,  sizeof(uint64_t),          (const uint8_t*) &txn->address_data.metadataKey)  ); // add scope metadata key
-    BAIL_IF( add_new_field(fields, XYM_STR_METADATA_VALUE,   STI_MESSAGE, txn->value_data.valueSize, value)                                            ); // add different value
-    BAIL_IF( add_new_field(fields, XYM_INT16_VALUE_DELTA,    STI_INT16,   sizeof(uint16_t),          (const uint8_t*) &txn->value_data.valueSizeDelta) ); // add value size delta
+    BAIL_IF( add_new_field(fields, DHP_UINT64_METADATA_KEY,  STI_UINT64,  sizeof(uint64_t),          (const uint8_t*) &txn->address_data.metadataKey)  ); // add scope metadata key
+    BAIL_IF( add_new_field(fields, DHP_STR_METADATA_VALUE,   STI_MESSAGE, txn->value_data.valueSize, value)                                            ); // add different value
+    BAIL_IF( add_new_field(fields, DHP_INT16_VALUE_DELTA,    STI_INT16,   sizeof(uint16_t),          (const uint8_t*) &txn->value_data.valueSizeDelta) ); // add value size delta
     
     return E_SUCCESS;
 }
  
 static int parse_mosaic_metadata_txn_content( buffer_t* rawTxData, fields_array_t* fields )
 {
-    return parse_metadata_txn_content( rawTxData, XYM_UINT64_MOSAIC_ID, fields );
+    return parse_metadata_txn_content( rawTxData, DHP_UINT64_MOSAIC_ID, fields );
 }
 
 static int parse_namespace_metadata_txn_content( buffer_t* rawTxData, fields_array_t* fields )
 {
-    return parse_metadata_txn_content( rawTxData, XYM_UINT64_NS_ID, fields );
+    return parse_metadata_txn_content( rawTxData, DHP_UINT64_NS_ID, fields );
 }
 
 
@@ -607,7 +607,7 @@ static int parse_namespace_metadata_txn_content( buffer_t* rawTxData, fields_arr
  *      uint64_t deadline;  ///< (only if not multisig)
  * 
  *      uint64_t namespaceId;
- *      uint8_t  address[XYM_ADDRESS_LENGTH];
+ *      uint8_t  address[DHP_ADDRESS_LENGTH];
  *      uint8_t  aliasAction;
  * }
  * 
@@ -628,9 +628,9 @@ static int parse_address_alias_txn_content( buffer_t* rawTxData, fields_array_t*
     if( !txn ) { return E_NOT_ENOUGH_DATA; }
     
     // create fields from extracted data
-    BAIL_IF( add_new_field(fields, XYM_UINT8_AA_TYPE, STI_UINT8,   sizeof(uint8_t),    (const uint8_t*) &txn->aliasAction) ); // add alias type
-    BAIL_IF( add_new_field(fields, XYM_UINT64_NS_ID,  STI_UINT64,  sizeof(uint64_t),   (const uint8_t*) &txn->namespaceId) ); // add namespace id
-    BAIL_IF( add_new_field(fields, XYM_STR_ADDRESS,   STI_ADDRESS, XYM_ADDRESS_LENGTH, (const uint8_t*) txn->address)      ); // add Recipient address
+    BAIL_IF( add_new_field(fields, DHP_UINT8_AA_TYPE, STI_UINT8,   sizeof(uint8_t),    (const uint8_t*) &txn->aliasAction) ); // add alias type
+    BAIL_IF( add_new_field(fields, DHP_UINT64_NS_ID,  STI_UINT64,  sizeof(uint64_t),   (const uint8_t*) &txn->namespaceId) ); // add namespace id
+    BAIL_IF( add_new_field(fields, DHP_STR_ADDRESS,   STI_ADDRESS, DHP_ADDRESS_LENGTH, (const uint8_t*) txn->address)      ); // add Recipient address
     
     return E_SUCCESS;
 }
@@ -672,9 +672,9 @@ static int parse_mosaic_alias_txn_content( buffer_t* rawTxData, fields_array_t* 
     if( !txn ) { return E_NOT_ENOUGH_DATA; }
     
     // create fields from extracted data
-    BAIL_IF( add_new_field(fields, XYM_UINT8_AA_TYPE,    STI_UINT8,  sizeof(uint8_t),  (const uint8_t*) &txn->aliasAction) ); // add alisa type
-    BAIL_IF( add_new_field(fields, XYM_UINT64_NS_ID,     STI_UINT64, sizeof(uint64_t), (const uint8_t*) &txn->namespaceId) ); // add namespace id
-    BAIL_IF( add_new_field(fields, XYM_UINT64_MOSAIC_ID, STI_UINT64, sizeof(uint64_t), (const uint8_t*) &txn->mosaicId)    ); // add mosaic id
+    BAIL_IF( add_new_field(fields, DHP_UINT8_AA_TYPE,    STI_UINT8,  sizeof(uint8_t),  (const uint8_t*) &txn->aliasAction) ); // add alisa type
+    BAIL_IF( add_new_field(fields, DHP_UINT64_NS_ID,     STI_UINT64, sizeof(uint64_t), (const uint8_t*) &txn->namespaceId) ); // add namespace id
+    BAIL_IF( add_new_field(fields, DHP_UINT64_MOSAIC_ID, STI_UINT64, sizeof(uint64_t), (const uint8_t*) &txn->mosaicId)    ); // add mosaic id
     
     return E_SUCCESS;
 }
@@ -734,14 +734,14 @@ static int parse_account_restriction_txn_content( buffer_t* rawTxData, uint8_t r
     {
         switch( restrictionType )
         {
-            case XYM_UINT8_AA_RESTRICTION:
-                BAIL_IF(add_new_field(fields, XYM_STR_ADDRESS,                      STI_ADDRESS, XYM_ADDRESS_LENGTH, buffer_offset_ptr_and_seek(rawTxData, XYM_ADDRESS_LENGTH)) ); 
+            case DHP_UINT8_AA_RESTRICTION:
+                BAIL_IF(add_new_field(fields, DHP_STR_ADDRESS,                      STI_ADDRESS, DHP_ADDRESS_LENGTH, buffer_offset_ptr_and_seek(rawTxData, DHP_ADDRESS_LENGTH)) ); 
                 break;
-            case XYM_UINT8_AM_RESTRICTION:
-                BAIL_IF(add_new_field(fields, XYM_UINT64_MOSAIC_ID,                 STI_UINT64, sizeof(uint64_t),    buffer_offset_ptr_and_seek(rawTxData, sizeof(uint64_t)))   ); 
+            case DHP_UINT8_AM_RESTRICTION:
+                BAIL_IF(add_new_field(fields, DHP_UINT64_MOSAIC_ID,                 STI_UINT64, sizeof(uint64_t),    buffer_offset_ptr_and_seek(rawTxData, sizeof(uint64_t)))   ); 
                 break;
-            case XYM_UINT8_AO_RESTRICTION:
-                BAIL_IF(add_new_field(fields, XYM_UINT16_ENTITY_RESTRICT_OPERATION, STI_UINT16, sizeof(uint16_t),    buffer_offset_ptr_and_seek(rawTxData, sizeof(uint16_t)))   ); 
+            case DHP_UINT8_AO_RESTRICTION:
+                BAIL_IF(add_new_field(fields, DHP_UINT16_ENTITY_RESTRICT_OPERATION, STI_UINT16, sizeof(uint16_t),    buffer_offset_ptr_and_seek(rawTxData, sizeof(uint16_t)))   ); 
                 break;
             default:
                 return E_INVALID_DATA;
@@ -755,14 +755,14 @@ static int parse_account_restriction_txn_content( buffer_t* rawTxData, uint8_t r
     for( uint8_t i = 0; i < txn->restrictionDeletionsCount; i++ )
     {
         switch (restrictionType) {
-            case XYM_UINT8_AA_RESTRICTION:
-                BAIL_IF(add_new_field(fields, XYM_STR_ADDRESS,                      STI_ADDRESS, XYM_ADDRESS_LENGTH, buffer_offset_ptr_and_seek(rawTxData, XYM_ADDRESS_LENGTH)) );
+            case DHP_UINT8_AA_RESTRICTION:
+                BAIL_IF(add_new_field(fields, DHP_STR_ADDRESS,                      STI_ADDRESS, DHP_ADDRESS_LENGTH, buffer_offset_ptr_and_seek(rawTxData, DHP_ADDRESS_LENGTH)) );
                 break;
-            case XYM_UINT8_AM_RESTRICTION:
-                BAIL_IF(add_new_field(fields, XYM_UINT64_MOSAIC_ID,                 STI_UINT64,  sizeof(uint64_t),   buffer_offset_ptr_and_seek(rawTxData, sizeof(uint64_t)))   ); 
+            case DHP_UINT8_AM_RESTRICTION:
+                BAIL_IF(add_new_field(fields, DHP_UINT64_MOSAIC_ID,                 STI_UINT64,  sizeof(uint64_t),   buffer_offset_ptr_and_seek(rawTxData, sizeof(uint64_t)))   ); 
                 break;
-            case XYM_UINT8_AO_RESTRICTION:
-                BAIL_IF(add_new_field(fields, XYM_UINT16_ENTITY_RESTRICT_OPERATION, STI_UINT16,  sizeof(uint16_t),   buffer_offset_ptr_and_seek(rawTxData, sizeof(uint16_t)))   ); 
+            case DHP_UINT8_AO_RESTRICTION:
+                BAIL_IF(add_new_field(fields, DHP_UINT16_ENTITY_RESTRICT_OPERATION, STI_UINT16,  sizeof(uint16_t),   buffer_offset_ptr_and_seek(rawTxData, sizeof(uint16_t)))   ); 
                 break;
             default:
                 return E_INVALID_DATA;
@@ -770,16 +770,16 @@ static int parse_account_restriction_txn_content( buffer_t* rawTxData, uint8_t r
     }
     
     // Show restriction operation
-    BAIL_IF(add_new_field(fields, XYM_UINT16_AR_RESTRICT_OPERATION, STI_UINT16, sizeof(int16_t), (const uint8_t*) &txn->restrictionFlags));
+    BAIL_IF(add_new_field(fields, DHP_UINT16_AR_RESTRICT_OPERATION, STI_UINT16, sizeof(int16_t), (const uint8_t*) &txn->restrictionFlags));
     
-    if(restrictionType != XYM_UINT8_AM_RESTRICTION)
+    if(restrictionType != DHP_UINT8_AM_RESTRICTION)
     {
         // Show restriction direction
-        BAIL_IF(add_new_field(fields, XYM_UINT16_AR_RESTRICT_DIRECTION, STI_UINT16, sizeof(int16_t), (const uint8_t*) &txn->restrictionFlags));
+        BAIL_IF(add_new_field(fields, DHP_UINT16_AR_RESTRICT_DIRECTION, STI_UINT16, sizeof(int16_t), (const uint8_t*) &txn->restrictionFlags));
     }
     
     // Show restriction type
-    BAIL_IF(add_new_field(fields, XYM_UINT16_AR_RESTRICT_TYPE, STI_UINT16, sizeof(int16_t), (const uint8_t*) &txn->restrictionFlags));
+    BAIL_IF(add_new_field(fields, DHP_UINT16_AR_RESTRICT_TYPE, STI_UINT16, sizeof(int16_t), (const uint8_t*) &txn->restrictionFlags));
     
     return E_SUCCESS;
 }
@@ -787,17 +787,17 @@ static int parse_account_restriction_txn_content( buffer_t* rawTxData, uint8_t r
 
 static int parse_account_address_restriction_txn_content( buffer_t* rawTxData, fields_array_t* fields )
 {
-    return parse_account_restriction_txn_content(rawTxData, XYM_UINT8_AA_RESTRICTION, fields);
+    return parse_account_restriction_txn_content(rawTxData, DHP_UINT8_AA_RESTRICTION, fields);
 }
 
 static int parse_account_mosaic_restriction_txn_content( buffer_t* rawTxData, fields_array_t* fields )
 {
-    return parse_account_restriction_txn_content(rawTxData, XYM_UINT8_AM_RESTRICTION, fields);
+    return parse_account_restriction_txn_content(rawTxData, DHP_UINT8_AM_RESTRICTION, fields);
 }
 
 static int parse_account_operation_restriction_txn_content( buffer_t* rawTxData, fields_array_t* fields )
 {
-    return parse_account_restriction_txn_content(rawTxData, XYM_UINT8_AO_RESTRICTION, fields);
+    return parse_account_restriction_txn_content(rawTxData, DHP_UINT8_AO_RESTRICTION, fields);
 }
 
 
@@ -813,7 +813,7 @@ static int parse_account_operation_restriction_txn_content( buffer_t* rawTxData,
  *      uint64_t maxFee;    ///< (only if not multisig)
  *      uint64_t deadline;  ///< (only if not multisig)
  * 
- *      uint8_t linkedPublicKey[ XYM_PUBLIC_KEY_LENGTH ];
+ *      uint8_t linkedPublicKey[ DHP_PUBLIC_KEY_LENGTH ];
  *      uint8_t linkAction;
  * }
  * 
@@ -833,25 +833,25 @@ static int parse_key_link_txn_content( buffer_t* rawTxData, uint8_t txType, fiel
     if( !txn ) { return E_NOT_ENOUGH_DATA; }
     
     // create fields from extracted data
-    BAIL_IF( add_new_field(fields, XYM_UINT8_KL_TYPE, STI_UINT8,      sizeof(uint8_t),       (const uint8_t*) &txn->linkAction)      ); // Show link action type
-    BAIL_IF( add_new_field(fields, txType,            STI_PUBLIC_KEY, XYM_PUBLIC_KEY_LENGTH, (const uint8_t*) &txn->linkedPublicKey) ); // Show linked public key
+    BAIL_IF( add_new_field(fields, DHP_UINT8_KL_TYPE, STI_UINT8,      sizeof(uint8_t),       (const uint8_t*) &txn->linkAction)      ); // Show link action type
+    BAIL_IF( add_new_field(fields, txType,            STI_PUBLIC_KEY, DHP_PUBLIC_KEY_LENGTH, (const uint8_t*) &txn->linkedPublicKey) ); // Show linked public key
     
     return E_SUCCESS;
 }
 
 static int parse_account_key_link_txn_content( buffer_t* rawTxData, fields_array_t* fields )
 {
-    return parse_key_link_txn_content(rawTxData, XYM_PUBLICKEY_ACCOUNT_KEY_LINK, fields);
+    return parse_key_link_txn_content(rawTxData, DHP_PUBLICKEY_ACCOUNT_KEY_LINK, fields);
 }
 
 static int parse_node_key_link_txn_content( buffer_t* rawTxData, fields_array_t* fields )
 {
-    return parse_key_link_txn_content(rawTxData, XYM_PUBLICKEY_NODE_KEY_LINK, fields);
+    return parse_key_link_txn_content(rawTxData, DHP_PUBLICKEY_NODE_KEY_LINK, fields);
 }
 
 static int parse_vrf_key_link_txn_content( buffer_t* rawTxData, fields_array_t* fields )
 {
-    return parse_key_link_txn_content(rawTxData, XYM_PUBLICKEY_VRF_KEY_LINK, fields);
+    return parse_key_link_txn_content(rawTxData, DHP_PUBLICKEY_VRF_KEY_LINK, fields);
 }
 
 
@@ -866,7 +866,7 @@ static int parse_vrf_key_link_txn_content( buffer_t* rawTxData, fields_array_t* 
  *      uint64_t maxFee;    ///< (only if not multisig)
  *      uint64_t deadline;  ///< (only if not multisig)
  * 
- *      uint8_t  linkedPublicKey[XYM_PUBLIC_KEY_LENGTH];
+ *      uint8_t  linkedPublicKey[DHP_PUBLIC_KEY_LENGTH];
  *      uint32_t startPoint;
  *      uint32_t endPoint;
  *      uint8_t  linkAction;
@@ -890,10 +890,10 @@ static int parse_voting_key_link_txn_content( buffer_t* rawTxData, fields_array_
     if( !txn ) { return E_NOT_ENOUGH_DATA; }
     
     // create fields from extracted data
-    BAIL_IF( add_new_field(fields, XYM_UINT8_KL_TYPE,             STI_UINT8,      sizeof(uint8_t),       (const uint8_t*) &txn->linkAction)      ); // add link action type
-    BAIL_IF( add_new_field(fields, XYM_UINT32_VKL_START_POINT,    STI_UINT32,     sizeof(uint32_t),      (const uint8_t*) &txn->startPoint)      ); // add start point
-    BAIL_IF( add_new_field(fields, XYM_UINT32_VKL_END_POINT,      STI_UINT32,     sizeof(uint32_t),      (const uint8_t*) &txn->endPoint)        ); // add stop point
-    BAIL_IF( add_new_field(fields, XYM_PUBLICKEY_VOTING_KEY_LINK, STI_PUBLIC_KEY, XYM_PUBLIC_KEY_LENGTH, (const uint8_t*) &txn->linkedPublicKey) ); // add linked public key
+    BAIL_IF( add_new_field(fields, DHP_UINT8_KL_TYPE,             STI_UINT8,      sizeof(uint8_t),       (const uint8_t*) &txn->linkAction)      ); // add link action type
+    BAIL_IF( add_new_field(fields, DHP_UINT32_VKL_START_POINT,    STI_UINT32,     sizeof(uint32_t),      (const uint8_t*) &txn->startPoint)      ); // add start point
+    BAIL_IF( add_new_field(fields, DHP_UINT32_VKL_END_POINT,      STI_UINT32,     sizeof(uint32_t),      (const uint8_t*) &txn->endPoint)        ); // add stop point
+    BAIL_IF( add_new_field(fields, DHP_PUBLICKEY_VOTING_KEY_LINK, STI_PUBLIC_KEY, DHP_PUBLIC_KEY_LENGTH, (const uint8_t*) &txn->linkedPublicKey) ); // add linked public key
     
     return E_SUCCESS;
 }
@@ -915,7 +915,7 @@ static int parse_voting_key_link_txn_content( buffer_t* rawTxData, fields_array_
  *      uint64_t mosaicId;
  *      uint64_t amount;
  *      uint64_t blockDuration;
- *      uint8_t  aggregateBondedHash[XYM_TRANSACTION_HASH_LENGTH];
+ *      uint8_t  aggregateBondedHash[DHP_TRANSACTION_HASH_LENGTH];
  * }
  * 
  * Output (fields)
@@ -935,9 +935,9 @@ static int parse_fund_lock_txn_content( buffer_t* rawTxData, fields_array_t* fie
     if( !txn ) { return E_NOT_ENOUGH_DATA; }
         
     // add fields    
-    BAIL_IF( add_new_field(fields, XYM_MOSAIC_HL_QUANTITY, STI_MOSAIC_CURRENCY, sizeof(mosaic_t),            (const uint8_t*) &txn->mosaic)              ); // Show lock quantity
-    BAIL_IF( add_new_field(fields, XYM_UINT64_DURATION,    STI_UINT64,          sizeof(uint64_t),            (const uint8_t*) &txn->blockDuration)       ); // Show duration
-    BAIL_IF( add_new_field(fields, XYM_HASH256_HL_HASH,    STI_HASH256,         XYM_TRANSACTION_HASH_LENGTH, (const uint8_t*) &txn->aggregateBondedHash) ); // Show transaction hash
+    BAIL_IF( add_new_field(fields, DHP_MOSAIC_HL_QUANTITY, STI_MOSAIC_CURRENCY, sizeof(mosaic_t),            (const uint8_t*) &txn->mosaic)              ); // Show lock quantity
+    BAIL_IF( add_new_field(fields, DHP_UINT64_DURATION,    STI_UINT64,          sizeof(uint64_t),            (const uint8_t*) &txn->blockDuration)       ); // Show duration
+    BAIL_IF( add_new_field(fields, DHP_HASH256_HL_HASH,    STI_HASH256,         DHP_TRANSACTION_HASH_LENGTH, (const uint8_t*) &txn->aggregateBondedHash) ); // Show transaction hash
     
     return E_SUCCESS;
 }
@@ -955,7 +955,7 @@ static int parseWithFee( buffer_t* rawTxData, fields_array_t* fields, int (*pars
     if( status != E_SUCCESS) { return status; }
 
     // Show tx fee
-    BAIL_IF(add_new_field(fields, XYM_UINT64_TXN_FEE, STI_XYM, sizeof(uint64_t), (const uint8_t*) &fee->maxFee));
+    BAIL_IF(add_new_field(fields, DHP_UINT64_TXN_FEE, STI_DHP, sizeof(uint64_t), (const uint8_t*) &fee->maxFee));
         
     return E_SUCCESS;
 }
@@ -974,31 +974,31 @@ static int parse_inner_txn_content( buffer_t* rawTxData, uint32_t len, bool isCo
         totalSize += txn->size;
         
         // Show Transaction type
-        BAIL_IF(add_new_field(fields, isCosigning ? XYM_UINT16_TRANSACTION_DETAIL_TYPE : XYM_UINT16_INNER_TRANSACTION_TYPE, STI_UINT16, sizeof(uint16_t), (const uint8_t*) &txn->innerTxType));
+        BAIL_IF(add_new_field(fields, isCosigning ? DHP_UINT16_TRANSACTION_DETAIL_TYPE : DHP_UINT16_INNER_TRANSACTION_TYPE, STI_UINT16, sizeof(uint16_t), (const uint8_t*) &txn->innerTxType));
         switch( txn->innerTxType )
         {
-            case XYM_TXN_TRANSFER:                      { BAIL_IF( parse_transfer_txn_content                      (rawTxData, fields) ); break; }
-            case XYM_TXN_MOSAIC_DEFINITION:             { BAIL_IF( parse_mosaic_definition_txn_content             (rawTxData, fields) ); break; }
-            case XYM_TXN_MOSAIC_SUPPLY_CHANGE:          { BAIL_IF( parse_mosaic_supply_change_txn_content          (rawTxData, fields) ); break; }
-            case XYM_TXN_MODIFY_MULTISIG_ACCOUNT:       { BAIL_IF( parse_multisig_account_modification_txn_content (rawTxData, fields) ); break; } 
-            case XYM_TXN_REGISTER_NAMESPACE:            { BAIL_IF( parse_namespace_registration_txn_content        (rawTxData, fields) ); break; }
-            case XYM_TXN_ACCOUNT_METADATA:              { BAIL_IF( parse_account_metadata_txn_content              (rawTxData, fields) ); break; }
-            case XYM_TXN_MOSAIC_METADATA:               { BAIL_IF( parse_mosaic_metadata_txn_content               (rawTxData, fields) ); break; }
-            case XYM_TXN_NAMESPACE_METADATA:            { BAIL_IF( parse_namespace_metadata_txn_content            (rawTxData, fields) ); break; }
+            case DHP_TXN_TRANSFER:                      { BAIL_IF( parse_transfer_txn_content                      (rawTxData, fields) ); break; }
+            case DHP_TXN_MOSAIC_DEFINITION:             { BAIL_IF( parse_mosaic_definition_txn_content             (rawTxData, fields) ); break; }
+            case DHP_TXN_MOSAIC_SUPPLY_CHANGE:          { BAIL_IF( parse_mosaic_supply_change_txn_content          (rawTxData, fields) ); break; }
+            case DHP_TXN_MODIFY_MULTISIG_ACCOUNT:       { BAIL_IF( parse_multisig_account_modification_txn_content (rawTxData, fields) ); break; } 
+            case DHP_TXN_REGISTER_NAMESPACE:            { BAIL_IF( parse_namespace_registration_txn_content        (rawTxData, fields) ); break; }
+            case DHP_TXN_ACCOUNT_METADATA:              { BAIL_IF( parse_account_metadata_txn_content              (rawTxData, fields) ); break; }
+            case DHP_TXN_MOSAIC_METADATA:               { BAIL_IF( parse_mosaic_metadata_txn_content               (rawTxData, fields) ); break; }
+            case DHP_TXN_NAMESPACE_METADATA:            { BAIL_IF( parse_namespace_metadata_txn_content            (rawTxData, fields) ); break; }
                                                                                                                                      
-            case XYM_TXN_ADDRESS_ALIAS:                 { BAIL_IF( parse_address_alias_txn_content                 (rawTxData, fields) ); break; }
-            case XYM_TXN_MOSAIC_ALIAS:                  { BAIL_IF( parse_mosaic_alias_txn_content                  (rawTxData, fields) ); break; }
+            case DHP_TXN_ADDRESS_ALIAS:                 { BAIL_IF( parse_address_alias_txn_content                 (rawTxData, fields) ); break; }
+            case DHP_TXN_MOSAIC_ALIAS:                  { BAIL_IF( parse_mosaic_alias_txn_content                  (rawTxData, fields) ); break; }
                                                                                                                                      
-            case XYM_TXN_ACCOUNT_ADDRESS_RESTRICTION:   { BAIL_IF( parse_account_address_restriction_txn_content   (rawTxData, fields) ); break; }
-            case XYM_TXN_ACCOUNT_MOSAIC_RESTRICTION:    { BAIL_IF( parse_account_mosaic_restriction_txn_content    (rawTxData, fields) ); break; }
-            case XYM_TXN_ACCOUNT_OPERATION_RESTRICTION: { BAIL_IF( parse_account_operation_restriction_txn_content (rawTxData, fields) ); break; }
+            case DHP_TXN_ACCOUNT_ADDRESS_RESTRICTION:   { BAIL_IF( parse_account_address_restriction_txn_content   (rawTxData, fields) ); break; }
+            case DHP_TXN_ACCOUNT_MOSAIC_RESTRICTION:    { BAIL_IF( parse_account_mosaic_restriction_txn_content    (rawTxData, fields) ); break; }
+            case DHP_TXN_ACCOUNT_OPERATION_RESTRICTION: { BAIL_IF( parse_account_operation_restriction_txn_content (rawTxData, fields) ); break; }
                                                                                                                                      
-            case XYM_TXN_ACCOUNT_KEY_LINK:              { BAIL_IF( parse_account_key_link_txn_content              (rawTxData, fields) ); break; }
-            case XYM_TXN_NODE_KEY_LINK:                 { BAIL_IF( parse_node_key_link_txn_content                 (rawTxData, fields) ); break; }
-            case XYM_TXN_VRF_KEY_LINK:                  { BAIL_IF( parse_vrf_key_link_txn_content                  (rawTxData, fields) ); break; }
+            case DHP_TXN_ACCOUNT_KEY_LINK:              { BAIL_IF( parse_account_key_link_txn_content              (rawTxData, fields) ); break; }
+            case DHP_TXN_NODE_KEY_LINK:                 { BAIL_IF( parse_node_key_link_txn_content                 (rawTxData, fields) ); break; }
+            case DHP_TXN_VRF_KEY_LINK:                  { BAIL_IF( parse_vrf_key_link_txn_content                  (rawTxData, fields) ); break; }
                                                                                                                                      
-            case XYM_TXN_VOTING_KEY_LINK:               { BAIL_IF( parse_voting_key_link_txn_content               (rawTxData, fields) ); break; }              
-            case XYM_TXN_FUND_LOCK:                     { BAIL_IF( parse_fund_lock_txn_content                     (rawTxData, fields) ); break; }
+            case DHP_TXN_VOTING_KEY_LINK:               { BAIL_IF( parse_voting_key_link_txn_content               (rawTxData, fields) ); break; }              
+            case DHP_TXN_FUND_LOCK:                     { BAIL_IF( parse_fund_lock_txn_content                     (rawTxData, fields) ); break; }
               
             default:
             {
@@ -1023,11 +1023,11 @@ static int parse_aggregate_txn_content( buffer_t* rawTxData, fields_array_t* fie
     const aggregate_txn_t *txn = (const aggregate_txn_t*) buffer_offset_ptr_and_seek(rawTxData, sizeof(aggregate_txn_t));
     if( !txn ) { return E_NOT_ENOUGH_DATA; }
 
-    bool isCosigning = (transactionContext.rawTxLength == XYM_TRANSACTION_HASH_LENGTH);
+    bool isCosigning = (transactionContext.rawTxLength == DHP_TRANSACTION_HASH_LENGTH);
     const uint8_t* p_tx_hash = isCosigning ? rawTxData->ptr : txn->transactionHash;
     
     // add fields
-    BAIL_IF( add_new_field(fields, XYM_HASH256_AGG_HASH, STI_HASH256, XYM_TRANSACTION_HASH_LENGTH, p_tx_hash) ); // add transaction hash
+    BAIL_IF( add_new_field(fields, DHP_HASH256_AGG_HASH, STI_HASH256, DHP_TRANSACTION_HASH_LENGTH, p_tx_hash) ); // add transaction hash
     if( !buffer_can_read(rawTxData, txn->payloadSize) ) { return E_INVALID_DATA; }
     BAIL_IF( parse_inner_txn_content(rawTxData, txn->payloadSize, isCosigning, fields) );
 
@@ -1042,30 +1042,30 @@ static int parse_txn_detail( buffer_t *rawTxData, const common_header_t *txn, fi
     fields->numFields = 0;
 
     // Show Transaction type
-    BAIL_IF( add_new_field(fields, XYM_UINT16_TRANSACTION_TYPE, STI_UINT16, sizeof(uint16_t), (const uint8_t*) &txn->transactionType) );
+    BAIL_IF( add_new_field(fields, DHP_UINT16_TRANSACTION_TYPE, STI_UINT16, sizeof(uint16_t), (const uint8_t*) &txn->transactionType) );
 
     switch( txn->transactionType )
     {
-        case XYM_TXN_TRANSFER:                     { result = parseWithFee( rawTxData, fields, parse_transfer_txn_content                      ); break; }
-        case XYM_TXN_AGGREGATE_COMPLETE:           { result = parseWithFee( rawTxData, fields, parse_aggregate_txn_content                     ); break; }
-        case XYM_TXN_AGGREGATE_BONDED:             { result = parseWithFee( rawTxData, fields, parse_aggregate_txn_content                     ); break; }
-        case XYM_TXN_MODIFY_MULTISIG_ACCOUNT:      { result = parseWithFee( rawTxData, fields, parse_multisig_account_modification_txn_content ); break; }
-        case XYM_TXN_REGISTER_NAMESPACE:           { result = parseWithFee( rawTxData, fields, parse_namespace_registration_txn_content        ); break; }
-        case XYM_TXN_ADDRESS_ALIAS:                { result = parseWithFee( rawTxData, fields, parse_address_alias_txn_content                 ); break; }
-        case XYM_TXN_MOSAIC_ALIAS:                 { result = parseWithFee( rawTxData, fields, parse_mosaic_alias_txn_content                  ); break; }
+        case DHP_TXN_TRANSFER:                     { result = parseWithFee( rawTxData, fields, parse_transfer_txn_content                      ); break; }
+        case DHP_TXN_AGGREGATE_COMPLETE:           { result = parseWithFee( rawTxData, fields, parse_aggregate_txn_content                     ); break; }
+        case DHP_TXN_AGGREGATE_BONDED:             { result = parseWithFee( rawTxData, fields, parse_aggregate_txn_content                     ); break; }
+        case DHP_TXN_MODIFY_MULTISIG_ACCOUNT:      { result = parseWithFee( rawTxData, fields, parse_multisig_account_modification_txn_content ); break; }
+        case DHP_TXN_REGISTER_NAMESPACE:           { result = parseWithFee( rawTxData, fields, parse_namespace_registration_txn_content        ); break; }
+        case DHP_TXN_ADDRESS_ALIAS:                { result = parseWithFee( rawTxData, fields, parse_address_alias_txn_content                 ); break; }
+        case DHP_TXN_MOSAIC_ALIAS:                 { result = parseWithFee( rawTxData, fields, parse_mosaic_alias_txn_content                  ); break; }
 
-        case XYM_TXN_ACCOUNT_ADDRESS_RESTRICTION:  { result = parseWithFee( rawTxData, fields, parse_account_address_restriction_txn_content   ); break; }
-        case XYM_TXN_ACCOUNT_MOSAIC_RESTRICTION:   { result = parseWithFee( rawTxData, fields, parse_account_mosaic_restriction_txn_content    ); break; }
-        case XYM_TXN_ACCOUNT_OPERATION_RESTRICTION:{ result = parseWithFee( rawTxData, fields, parse_account_operation_restriction_txn_content ); break; }
+        case DHP_TXN_ACCOUNT_ADDRESS_RESTRICTION:  { result = parseWithFee( rawTxData, fields, parse_account_address_restriction_txn_content   ); break; }
+        case DHP_TXN_ACCOUNT_MOSAIC_RESTRICTION:   { result = parseWithFee( rawTxData, fields, parse_account_mosaic_restriction_txn_content    ); break; }
+        case DHP_TXN_ACCOUNT_OPERATION_RESTRICTION:{ result = parseWithFee( rawTxData, fields, parse_account_operation_restriction_txn_content ); break; }
 
-        case XYM_TXN_ACCOUNT_KEY_LINK:             { result = parseWithFee( rawTxData, fields, parse_account_key_link_txn_content              ); break; }
-        case XYM_TXN_NODE_KEY_LINK:                { result = parseWithFee( rawTxData, fields, parse_node_key_link_txn_content                 ); break; }
-        case XYM_TXN_VRF_KEY_LINK:                 { result = parseWithFee( rawTxData, fields, parse_vrf_key_link_txn_content                  ); break; }
+        case DHP_TXN_ACCOUNT_KEY_LINK:             { result = parseWithFee( rawTxData, fields, parse_account_key_link_txn_content              ); break; }
+        case DHP_TXN_NODE_KEY_LINK:                { result = parseWithFee( rawTxData, fields, parse_node_key_link_txn_content                 ); break; }
+        case DHP_TXN_VRF_KEY_LINK:                 { result = parseWithFee( rawTxData, fields, parse_vrf_key_link_txn_content                  ); break; }
 
-        case XYM_TXN_VOTING_KEY_LINK:              { result = parseWithFee( rawTxData, fields, parse_voting_key_link_txn_content               ); break; }
-        case XYM_TXN_MOSAIC_DEFINITION:            { result = parseWithFee( rawTxData, fields, parse_mosaic_definition_txn_content             ); break; }
-        case XYM_TXN_MOSAIC_SUPPLY_CHANGE:         { result = parseWithFee( rawTxData, fields, parse_mosaic_supply_change_txn_content          ); break; }
-        case XYM_TXN_FUND_LOCK:                    { result = parseWithFee( rawTxData, fields, parse_fund_lock_txn_content                     ); break; }
+        case DHP_TXN_VOTING_KEY_LINK:              { result = parseWithFee( rawTxData, fields, parse_voting_key_link_txn_content               ); break; }
+        case DHP_TXN_MOSAIC_DEFINITION:            { result = parseWithFee( rawTxData, fields, parse_mosaic_definition_txn_content             ); break; }
+        case DHP_TXN_MOSAIC_SUPPLY_CHANGE:         { result = parseWithFee( rawTxData, fields, parse_mosaic_supply_change_txn_content          ); break; }
+        case DHP_TXN_FUND_LOCK:                    { result = parseWithFee( rawTxData, fields, parse_fund_lock_txn_content                     ); break; }
           
         default:
         {
@@ -1079,7 +1079,7 @@ static int parse_txn_detail( buffer_t *rawTxData, const common_header_t *txn, fi
 
 static void set_sign_data_length( const buffer_t* rawTxdata, uint16_t transactionType ) //TODO: dont change global transactionContext here!!
 {
-    if( (transactionType == XYM_TXN_AGGREGATE_COMPLETE) || (transactionType == XYM_TXN_AGGREGATE_BONDED) )
+    if( (transactionType == DHP_TXN_AGGREGATE_COMPLETE) || (transactionType == DHP_TXN_AGGREGATE_BONDED) )
     {
         const unsigned char TESTNET_GENERATION_HASH[] = { 0x49, 0xD6, 0xE1, 0xCE, 0x27, 0x6A, 0x85, 0xB7,
                                                           0x0E, 0xAF, 0xE5, 0x23, 0x49, 0xAA, 0xCC, 0xA3,
@@ -1093,19 +1093,19 @@ static void set_sign_data_length( const buffer_t* rawTxdata, uint16_t transactio
 
         const bool           is_using_mainnet = (transactionContext.bip32Path[1] & 0x7FFFFFFF) == 4343; // checks if the coin_type field of bip32 path is 'symbol'
         const unsigned char* net_hash         = is_using_mainnet ? MAINNET_GENERATION_HASH : TESTNET_GENERATION_HASH;
-        const bool           hashes_equal     = memcmp(net_hash, rawTxdata->ptr, XYM_TRANSACTION_HASH_LENGTH) == 0;
+        const bool           hashes_equal     = memcmp(net_hash, rawTxdata->ptr, DHP_TRANSACTION_HASH_LENGTH) == 0;
 
         if( hashes_equal )
         {
             // Sign data from generation hash to transaction hash
-            // XYM_AGGREGATE_SIGNING_LENGTH = XYM_TRANSACTION_HASH_LENGTH
+            // DHP_AGGREGATE_SIGNING_LENGTH = DHP_TRANSACTION_HASH_LENGTH
             //                                + sizeof(common_header_t) + sizeof(txn_fee_t) = 84
-            transactionContext.rawTxLength = XYM_AGGREGATE_SIGNING_LENGTH;
+            transactionContext.rawTxLength = DHP_AGGREGATE_SIGNING_LENGTH;
         }
         else 
         {
             // Sign transaction hash only (multisig cosigning transaction)
-            transactionContext.rawTxLength = XYM_TRANSACTION_HASH_LENGTH;
+            transactionContext.rawTxLength = DHP_TRANSACTION_HASH_LENGTH;
         }
     }
     else 

@@ -1,7 +1,7 @@
 /*******************************************************************************
-*    XYM Wallet
+*    DHP Wallet
 *    (c) 2020 Ledger
-*    (c) 2020 FDS
+*    (c) 2023 dHealth
 *
 *  Licensed under the Apache License, Version 2.0 (the "License");
 *  you may not use this file except in compliance with the License.
@@ -15,11 +15,11 @@
 *  See the License for the specific language governing permissions and
 *  limitations under the License.
 ********************************************************************************/
-#ifndef LEDGER_APP_XYM_SIGNTRANSACTION_H
-#define LEDGER_APP_XYM_SIGNTRANSACTION_H
+#ifndef LEDGER_APP_DHP_SIGNTRANSACTION_H
+#define LEDGER_APP_DHP_SIGNTRANSACTION_H
 
 #include <stdint.h>
-#include "xym/parse/xym_parse.h"
+#include "dhp/parse/dhp_parse.h"
 #include "types.h"
 
 extern fields_array_t fields;
@@ -39,4 +39,4 @@ extern fields_array_t fields;
 int handle_sign( const ApduCommand_t* cmd );
 
 
-#endif //LEDGER_APP_XYM_SIGNTRANSACTION_H
+#endif //LEDGER_APP_DHP_SIGNTRANSACTION_H

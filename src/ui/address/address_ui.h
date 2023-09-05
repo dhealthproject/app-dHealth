@@ -1,7 +1,7 @@
 /*******************************************************************************
-*    XYM Wallet
+*    DHP Wallet
 *    (c) 2020 Ledger
-*    (c) 2020 FDS
+*    (c) 2023 dHealth
 *
 *  Licensed under the Apache License, Version 2.0 (the "License");
 *  you may not use this file except in compliance with the License.
@@ -15,12 +15,12 @@
 *  See the License for the specific language governing permissions and
 *  limitations under the License.
 ********************************************************************************/
-#ifndef LEDGER_APP_XYM_ADDRESSUI_H
-#define LEDGER_APP_XYM_ADDRESSUI_H
+#ifndef LEDGER_APP_DHP_ADDRESSUI_H
+#define LEDGER_APP_DHP_ADDRESSUI_H
 
 #include "common.h"
 
 void display_address_confirmation_ui(char* address, action_t onApprove, action_t onReject);
 void display_address_confirmation_done(bool validated);
 
-#endif //LEDGER_APP_XYM_ADDRESSUI_H
+#endif //LEDGER_APP_DHP_ADDRESSUI_H

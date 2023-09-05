@@ -1,7 +1,7 @@
 /*******************************************************************************
-*    XYM Wallet
+*    DHP Wallet
 *    (c) 2020 Ledger
-*    (c) 2020 FDS
+*    (c) 2023 dHealth
 *
 *  Licensed under the Apache License, Version 2.0 (the "License");
 *  you may not use this file except in compliance with the License.
@@ -15,8 +15,8 @@
 *  See the License for the specific language governing permissions and
 *  limitations under the License.
 ********************************************************************************/
-#ifndef LEDGER_APP_XYM_UX_H
-#define LEDGER_APP_XYM_UX_H
+#ifndef LEDGER_APP_DHP_UX_H
+#define LEDGER_APP_DHP_UX_H
 
 #if defined(TARGET_NANOX) || defined(TARGET_NANOS2)
 #define DEV_SCREEN_H 64
@@ -28,4 +28,4 @@
 #define UI_DUMMY(userid) {{BAGL_RECTANGLE,userid,0,0,0,0,0,0,BAGL_FILL,0,0xFFFFFF,0,0},NULL}
 #define UI_SINGLE_TEXT(text) {{BAGL_LABELINE,0,0,DEV_SCREEN_H / 2 + 2,128,12,0,0,0,0xFFFFFF,0,BAGL_FONT_OPEN_SANS_EXTRABOLD_11px|BAGL_FONT_ALIGNMENT_CENTER,0},(char *)(text)}
 
-#endif //LEDGER_APP_XYM_UX_H
+#endif //LEDGER_APP_DHP_UX_H

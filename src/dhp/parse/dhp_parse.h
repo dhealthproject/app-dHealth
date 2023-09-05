@@ -1,6 +1,6 @@
 /*******************************************************************************
-*    XYM Wallet
-*    (c) 2020 FDS
+*    DHP Wallet
+*    (c) 2023 dHealth
 *
 *  Licensed under the Apache License, Version 2.0 (the "License");
 *  you may not use this file except in compliance with the License.
@@ -14,15 +14,15 @@
 *  See the License for the specific language governing permissions and
 *  limitations under the License.
 ********************************************************************************/
-#ifndef LEDGER_APP_XYM_XYMPARSE_H
-#define LEDGER_APP_XYM_XYMPARSE_H
+#ifndef LEDGER_APP_DHP_DHPPARSE_H
+#define LEDGER_APP_DHP_DHPPARSE_H
 
 #include "limitations.h"
-#include "xym/format/fields.h"
-#include "xym/xym_helpers.h"
+#include "dhp/format/fields.h"
+#include "dhp/dhp_helpers.h"
 #include "buffer.h"
 
-#define XYM_PERSISTENT_DELEGATED_HARVESTING 0xFE
+#define DHP_PERSISTENT_DELEGATED_HARVESTING 0xFE
 #define ALIGNMENT_BYTES 8
 
 #pragma pack(push, 1)
@@ -59,4 +59,4 @@ typedef struct
  */
 int parse_txn_context( buffer_t* rawTxdata, fields_array_t* fields );
 
-#endif //LEDGER_APP_XYM_XYMPARSE_H
+#endif //LEDGER_APP_DHP_DHPPARSE_H

@@ -1,7 +1,7 @@
 /*******************************************************************************
-*    XYM Wallet
+*    DHP Wallet
 *    (c) 2020 Ledger
-*    (c) 2020 FDS
+*    (c) 2023 dHealth
 *
 *  Licensed under the Apache License, Version 2.0 (the "License");
 *  you may not use this file except in compliance with the License.
@@ -15,8 +15,8 @@
 *  See the License for the specific language governing permissions and
 *  limitations under the License.
 ********************************************************************************/
-#ifndef LEDGER_APP_XYM_GLOBAL_H
-#define LEDGER_APP_XYM_GLOBAL_H
+#ifndef LEDGER_APP_DHP_GLOBAL_H
+#define LEDGER_APP_DHP_GLOBAL_H
 
 #ifndef FUZZ
 #include <os.h>
@@ -46,7 +46,7 @@ typedef struct {
 extern transaction_context_t transactionContext;
 extern sign_state_e signState;
 
-void reset_transaction_context();
+void reset_transaction_context(void);
 
 
 /**
@@ -57,4 +57,4 @@ void reset_transaction_context();
 int handle_error( ApduResponse_t errorCode );
 
 
-#endif //LEDGER_APP_XYM_GLOBAL_H
+#endif //LEDGER_APP_DHP_GLOBAL_H

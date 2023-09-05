@@ -1,7 +1,7 @@
 /*******************************************************************************
-*    XYM Wallet
+*    DHP Wallet
 *    (c) 2020 Ledger
-*    (c) 2020 FDS
+*    (c) 2023 dHealth
 *
 *  Licensed under the Apache License, Version 2.0 (the "License");
 *  you may not use this file except in compliance with the License.
@@ -20,7 +20,7 @@
 #include <ux.h>
 #include "limitations.h"
 #include "ui/main/idle_menu.h"
-#include "xym/xym_helpers.h"
+#include "dhp/dhp_helpers.h"
 #include "glyphs.h"
 #ifdef HAVE_NBGL
 #include "nbgl_use_case.h"
@@ -103,13 +103,13 @@ void display_address_confirmation_ui(char* address, action_t onApprove, action_t
     rejection_action = onReject;
 
     explicit_bzero(fieldValue, MAX_FIELD_LEN);
-    strncpy(fieldValue, address, XYM_PRETTY_ADDRESS_LENGTH);
+    strncpy(fieldValue, address, DHP_PRETTY_ADDRESS_LENGTH);
 
 #ifdef HAVE_BAGL
     ux_flow_init(0, ux_display_address_flow, NULL);
 #else
-    nbgl_useCaseReviewStart(&C_stax_app_symbol_64px,
-                            "Verify Symbol\n Address", NULL, "Cancel",
+    nbgl_useCaseReviewStart(&C_stax_app_dHealth_64px,
+                            "Verify dHealth\n Address", NULL, "Cancel",
                             display_addr, address_verification_cancelled);
 #endif
 }

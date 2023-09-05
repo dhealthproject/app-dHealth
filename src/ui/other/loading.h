@@ -1,6 +1,6 @@
 /*******************************************************************************
-*   XYM Wallet
-*    (c) 2020 FDS
+*   DHP Wallet
+*    (c) 2023 dHealth
 *
 *  Licensed under the Apache License, Version 2.0 (the "License");
 *  you may not use this file except in compliance with the License.
@@ -15,11 +15,11 @@
 *  limitations under the License.
 ********************************************************************************/
 
-#ifndef LEDGER_APP_XYM_LOADING_H
-#define LEDGER_APP_XYM_LOADING_H
+#ifndef LEDGER_APP_DHP_LOADING_H
+#define LEDGER_APP_DHP_LOADING_H
 
 #include "transaction/transaction.h"
 
 void execute_async(action_t actionToLoad, char* message);
 
-#endif //LEDGER_APP_XYM_LOADING_H
+#endif //LEDGER_APP_DHP_LOADING_H
