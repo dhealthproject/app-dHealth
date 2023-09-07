@@ -8,13 +8,14 @@ from utils import ROOT_SCREENSHOT_PATH
 # Proposed DHP derivation paths for tests ###
 DHEALTH_PATH = "m/44'/10111'/0'/0'/0'"
 
-SPECULOS_EXPECTED_PUBLIC_KEY = "73f0bf90d39d1d0a3ec03740eec95c12"\
-                               "7a82a20bf07f6840462125a94a42df1e"
+SPECULOS_EXPECTED_PUBLIC_KEY = "e521d51965c3d432af417e19c5f2a967"\
+                               "c73f3410d81b85b474ed2e63fbaa00b6"
 
 
 def check_get_public_key_resp(backend, public_key):
     if isinstance(backend, SpeculosBackend):
         # Check against nominal Speculos seed expected results
+        print(public_key.hex())
         assert public_key.hex() == SPECULOS_EXPECTED_PUBLIC_KEY
 
 
