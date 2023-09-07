@@ -218,7 +218,7 @@ static int parse_transfer_txn_content( buffer_t* rawTxData, fields_array_t* fiel
         BAIL_IF( add_new_field(fields, DHP_UINT8_MOSAIC_COUNT, STI_UINT8, sizeof(uint8_t), (const uint8_t*) &txn->mosaicsCount) ); // add sent mosaic count field
     }
 
-    const bool     is_using_mainnet = (transactionContext.bip32Path[1] & 0x7FFFFFFF) == 4343; // checks if the coin_type field of bip32 path is 'symbol'
+    const bool     is_using_mainnet = (transactionContext.bip32Path[1] & 0x7FFFFFFF) == 10111; // checks if the coin_type field of bip32 path is 'symbol'
     const uint64_t mosaic_net_id    = (is_using_mainnet ? DHP_MAINNET_MOSAIC_ID : DHP_TESTNET_MOSAIC_ID);
 
     // Show mosaics amounts
@@ -1091,7 +1091,7 @@ static void set_sign_data_length( const buffer_t* rawTxdata, uint16_t transactio
                                                           0x04, 0xCD, 0x45, 0x8E, 0x0A, 0xA2, 0xD9, 0xF1,
                                                           0xD5, 0xF3, 0x1A, 0x40, 0x20, 0x72, 0xB2, 0xD6 };
 
-        const bool           is_using_mainnet = (transactionContext.bip32Path[1] & 0x7FFFFFFF) == 4343; // checks if the coin_type field of bip32 path is 'symbol'
+        const bool           is_using_mainnet = (transactionContext.bip32Path[1] & 0x7FFFFFFF) == 10111; // checks if the coin_type field of bip32 path is 'symbol'
         const unsigned char* net_hash         = is_using_mainnet ? MAINNET_GENERATION_HASH : TESTNET_GENERATION_HASH;
         const bool           hashes_equal     = memcmp(net_hash, rawTxdata->ptr, DHP_TRANSACTION_HASH_LENGTH) == 0;
 

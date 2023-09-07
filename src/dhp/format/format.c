@@ -215,7 +215,7 @@ static void address_formatter(const field_t *field, char *dst) {
 static void mosaic_formatter(const field_t *field, char *dst) {
     if (field->dataType == STI_MOSAIC_CURRENCY) {
         const mosaic_t* value = (const mosaic_t *)field->data;
-        bool is_using_mainnet = (transactionContext.bip32Path[1] & 0x7FFFFFFF) == 4343 ? true : false;
+        bool is_using_mainnet = (transactionContext.bip32Path[1] & 0x7FFFFFFF) == 10111 ? true : false;
         if ((value->mosaicId == (is_using_mainnet ? DHP_MAINNET_MOSAIC_ID : DHP_TESTNET_MOSAIC_ID)) || field->id == DHP_MOSAIC_HL_QUANTITY) {
             dhp_print_amount(value->amount, 6, "DHP", dst, MAX_FIELD_LEN);
         } else {

@@ -9,7 +9,7 @@ from apps.dHealth_transaction_builder import encode_txn_context
 from utils import ROOT_SCREENSHOT_PATH, CORPUS_DIR, CORPUS_FILES
 
 # Proposed DHP derivation paths for tests ###
-DHEALTH_PATH = "m/44'/4343'/0'/0'/0'"
+DHEALTH_PATH = "m/44'/10111'/0'/0'/0'"
 
 
 def load_transaction_from_file(transaction_filename):

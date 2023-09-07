@@ -6,7 +6,7 @@ from apps.dHealth import dHealthClient, ErrorType
 from utils import ROOT_SCREENSHOT_PATH
 
 # Proposed DHP derivation paths for tests ###
-DHEALTH_PATH = "m/44'/4343'/0'/0'/0'"
+DHEALTH_PATH = "m/44'/10111'/0'/0'/0'"
 
 SPECULOS_EXPECTED_PUBLIC_KEY = "73f0bf90d39d1d0a3ec03740eec95c12"\
                                "7a82a20bf07f6840462125a94a42df1e"
