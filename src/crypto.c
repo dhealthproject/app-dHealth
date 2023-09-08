@@ -37,7 +37,7 @@ void crypto_derive_private_key( const uint32_t*              bip32_path,
             {
                 unsigned char seed_key[] = "ed25519 seed";
 
-                os_perso_derive_node_bip32_seed_key( HDW_ED25519_SLIP10, 
+                os_derive_bip32_with_seed_no_throw(HDW_ED25519_SLIP10,
                                                      CX_CURVE_Ed25519, 
                                                      bip32_path, 
                                                      bip32_path_len, 
@@ -48,7 +48,7 @@ void crypto_derive_private_key( const uint32_t*              bip32_path,
             }
             else
             {
-                os_perso_derive_node_bip32( CX_CURVE_256K1,
+                os_derive_bip32_no_throw( CX_CURVE_256K1,
                                             bip32_path,
                                             bip32_path_len,
                                             raw_private_key,
@@ -56,7 +56,7 @@ void crypto_derive_private_key( const uint32_t*              bip32_path,
             }
 
             // initialize private_key from raw key
-            cx_ecfp_init_private_key(CX_CURVE_Ed25519,
+            cx_ecfp_init_private_key_no_throw(CX_CURVE_Ed25519,
                                      raw_private_key,
                                      sizeof(raw_private_key),
                                      private_key);
