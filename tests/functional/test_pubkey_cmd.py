@@ -6,10 +6,10 @@ from apps.dHealth import dHealthClient, ErrorType
 from utils import ROOT_SCREENSHOT_PATH
 
 # Proposed DHP derivation paths for tests ###
-DHEALTH_PATH = "m/44'/10111'/0'/0'/0'"
+DHEALTH_PATH = "m/44'/1'/0'/0'/0'"
 
-SPECULOS_EXPECTED_PUBLIC_KEY = "e521d51965c3d432af417e19c5f2a967"\
-                               "c73f3410d81b85b474ed2e63fbaa00b6"
+SPECULOS_EXPECTED_PUBLIC_KEY = "f9e5d9f4437cf656ef76da8fa17d38f6"\
+                               "6569ec61cca09b28d7210d0ed18b59f0"
 
 
 def check_get_public_key_resp(backend, public_key):
