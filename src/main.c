@@ -114,7 +114,7 @@ unsigned char io_event(unsigned char channel)
               SEPROXYHAL_TAG_STATUS_EVENT_FLAG_USB_POWERED)) {
             THROW(EXCEPTION_IO_RESET);
         }
-        /* fallthrough */
+        break;
 
     case SEPROXYHAL_TAG_DISPLAY_PROCESSED_EVENT:
 #ifdef HAVE_BAGL

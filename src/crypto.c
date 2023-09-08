@@ -26,7 +26,7 @@ void crypto_derive_private_key( const uint32_t*              bip32_path,
                                 const CurveType_t            curve_type,
                                       cx_ecfp_private_key_t* private_key    )
 {
-    uint8_t raw_private_key[DHP_PRIVATE_KEY_LENGTH] = {0};
+    uint8_t raw_private_key[64] = {0};
 
     BEGIN_TRY 
     {
@@ -37,7 +37,7 @@ void crypto_derive_private_key( const uint32_t*              bip32_path,
             {
                 unsigned char seed_key[] = "ed25519 seed";
 
-                os_derive_bip32_with_seed_no_throw(HDW_ED25519_SLIP10,
+                int r = os_derive_bip32_with_seed_no_throw(HDW_ED25519_SLIP10,
                                                      CX_CURVE_Ed25519, 
                                                      bip32_path, 
                                                      bip32_path_len, 
@@ -45,20 +45,28 @@ void crypto_derive_private_key( const uint32_t*              bip32_path,
                                                      NULL, 
                                                      seed_key, 
                                                      sizeof(seed_key)-1 );
+
+                if (r != CX_OK) {
+                    THROW(r);
+                }
             }
             else
             {
-                os_derive_bip32_no_throw( CX_CURVE_256K1,
+                int r = os_derive_bip32_no_throw( CX_CURVE_256K1,
                                             bip32_path,
                                             bip32_path_len,
                                             raw_private_key,
                                             NULL );
+
+                if (r != CX_OK) {
+                    THROW(r);
+                }
             }
 
             // initialize private_key from raw key
             cx_ecfp_init_private_key_no_throw(CX_CURVE_Ed25519,
                                      raw_private_key,
-                                     sizeof(raw_private_key),
+                                     DHP_PRIVATE_KEY_LENGTH,
                                      private_key);
         }
         CATCH_OTHER(e) 

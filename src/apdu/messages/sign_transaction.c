@@ -65,9 +65,17 @@ void sign_transaction()
             io_seproxyhal_io_heartbeat();
 
             // sign transaction
-            sigLength = (uint32_t) cx_eddsa_sign( &privateKey, CX_LAST, CX_SHA512, transactionContext.rawTx,
-                                                   transactionContext.rawTxLength, NULL, 0, signature,
-                                                   IO_APDU_BUFFER_SIZE, NULL );
+            int r = cx_eddsa_sign_no_throw( &privateKey, CX_SHA512, transactionContext.rawTx,
+                                                   transactionContext.rawTxLength, signature,
+                                                   IO_APDU_BUFFER_SIZE );
+
+            if (r != CX_OK) {
+                THROW(r);
+            }
+
+            size_t size;
+            cx_ecdomain_parameters_length( privateKey.curve, &size );
+            sigLength = (uint32_t) 2 * size;
         }
         CATCH_OTHER(e) 
         {

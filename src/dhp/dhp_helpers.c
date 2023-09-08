@@ -83,14 +83,14 @@ void dhp_print_amount(uint64_t amount, uint8_t divisibility, const char *asset, 
 #ifndef FUZZ
 void sha_calculation(uint8_t *in, uint8_t inlen, uint8_t *out, uint8_t outlen) {
     cx_sha3_t hash;
-    cx_sha3_init(&hash, 256);
-    cx_hash(&hash.header, CX_LAST, in, inlen, out, outlen);
+    cx_sha3_init_no_throw(&hash, 256);
+    cx_hash_no_throw(&hash.header, CX_LAST, in, inlen, out, outlen);
 }
 
 void ripemd(uint8_t *in, uint8_t inlen, uint8_t *out, uint8_t outlen) {
     cx_ripemd160_t hash;
     cx_ripemd160_init(&hash);
-    cx_hash(&hash.header, CX_LAST, in, inlen, out, outlen);
+    cx_hash_no_throw(&hash.header, CX_LAST, in, inlen, out, outlen);
 }
 
 void dhp_public_key_and_address( cx_ecfp_public_key_t *inPublicKey, uint8_t inNetworkId, uint8_t *outPublicKey, char *outAddress, uint8_t outLen ) 

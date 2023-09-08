@@ -23,9 +23,10 @@ extern action_t approval_action;
 extern action_t rejection_action;
 
 void on_approval_menu_result(unsigned int result) {
+    char message[] = "Signing...";
     switch (result) {
         case OPTION_SIGN:
-            execute_async(approval_action, "Signing...");
+            execute_async(approval_action, message);
             break;
         case OPTION_REJECT:
             rejection_action();

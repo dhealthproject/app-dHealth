@@ -138,7 +138,7 @@ void get_public_key( KeyData_t* keyData, uint8_t key[ DHP_PUBLIC_KEY_LENGTH ], c
 
             // generate public key from private key
             cx_ecfp_public_key_t  publicKey;
-            cx_ecfp_generate_pair2( CX_CURVE_Ed25519, &publicKey, &privateKey, 1, CX_SHA512 );
+            cx_ecfp_generate_pair2_no_throw( CX_CURVE_Ed25519, &publicKey, &privateKey, 1, CX_SHA512 );
             explicit_bzero( &privateKey, sizeof(privateKey) );
             
             // ensure a I/O channel is not timing out

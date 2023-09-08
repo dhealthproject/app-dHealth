@@ -219,7 +219,8 @@ static void mosaic_formatter(const field_t *field, char *dst) {
         if ((value->mosaicId == (is_using_mainnet ? DHP_MAINNET_MOSAIC_ID : DHP_TESTNET_MOSAIC_ID)) || field->id == DHP_MOSAIC_HL_QUANTITY) {
             dhp_print_amount(value->amount, 6, "DHP", dst, MAX_FIELD_LEN);
         } else {
-            snprintf_mosaic(dst, MAX_FIELD_LEN, value, "micro");
+            char asset[] = "micro";
+            snprintf_mosaic(dst, MAX_FIELD_LEN, value, asset);
         }
     }
 }
