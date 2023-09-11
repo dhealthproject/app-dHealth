@@ -236,7 +236,7 @@ static int parse_transfer_txn_content( buffer_t* rawTxData, fields_array_t* fiel
 
         if( mosaic->mosaicId != mosaic_net_id )
         {            
-            BAIL_IF( add_new_field(fields, DHP_UNKNOWN_MOSAIC, STI_STR, 0, (const uint8_t*) mosaic) ); // Unknow mosaic notification
+            BAIL_IF( add_new_field(fields, DHP_UNKNOWN_MOSAIC, STI_STR, 0, (const uint8_t*) mosaic) ); // Unknown mosaic notification
         }
 
         BAIL_IF( add_new_field(fields, DHP_MOSAIC_AMOUNT, STI_MOSAIC_CURRENCY, sizeof(mosaic_t), (const uint8_t*) mosaic) );

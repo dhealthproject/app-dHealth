@@ -92,7 +92,7 @@ TESTS_CASES = {
         ("Address", "TDZKL2HAMOWRVEEF55NVCZ7C6GSWIXCI7IWAESI"),
         ("Deletion Count", "Not change"),
         ("Restriction Flag", "Block"),
-        ("Restriction Flag", "Imcoming"),
+        ("Restriction Flag", "Incoming"),
         ("Restriction Flag", "Address"),
         ("Fee", "0.16 DHP")
     ],

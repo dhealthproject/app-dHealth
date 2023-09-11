@@ -44,7 +44,7 @@ static void int16_formatter(const field_t *field, char *dst) {
     if (value > 0) {
         SNPRINTF(dst, "%s %d %s", "Increase", value, "byte(s)");
     } else if (value < 0) {
-        SNPRINTF(dst, "%s %d %s", "Descrease", ~value + 1, "byte(s)");
+        SNPRINTF(dst, "%s %d %s", "Decrease", ~value + 1, "byte(s)");
     } else {
         SNPRINTF(dst, "%s", "Not change");
     }
@@ -138,7 +138,7 @@ static void uint16_formatter(const field_t *field, char *dst) {
         if ((value & 0x4000) != 0) {
             SNPRINTF(dst, "%s", "Outgoing");
         } else {
-            SNPRINTF(dst, "%s", "Imcoming");
+            SNPRINTF(dst, "%s", "Incoming");
         }
     } else if (field->id == DHP_UINT16_AR_RESTRICT_OPERATION) {
         if ((value & 0x8000) != 0) {

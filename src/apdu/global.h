@@ -50,7 +50,7 @@ void reset_transaction_context(void);
 
 
 /**
- * Resets the transaction context and send an error reponse 
+ * Resets the transaction context and send an error response
  * to host.
  * 
  */

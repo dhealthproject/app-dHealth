@@ -192,7 +192,7 @@ aliasAction 01
 
 #  Mosaic Supply Change Transaction schema (0x424E)
 5. Mosaic Supply Change Transaction (Reference: https://docs.symbolplatform.com/serialization/mosaic.html#mosaicsupplychangetransaction)
-##### Note: Avaiable for inner tx transaction (ref: [here](#Mosaic-Supply-Change-Transaction-(Inner-tx-2)))
+##### Note: Available for inner tx transaction (ref: [here](#Mosaic-Supply-Change-Transaction-(Inner-tx-2)))
 
 ###-Mosaic Supply Change Transaction
 
@@ -303,7 +303,7 @@ flags 	                                MosaicFlag  (uint8)                      
 divisibility                        	uint8                                   	Mosaic divisibility.
 ```
 ### Mosaic Supply Change Transaction (Inner tx 2)
-##### Note: Avaiable for normal transaction (ref: [here](#mosaic-supply-change-transaction-schema-(0x424e)))
+##### Note: Available for normal transaction (ref: [here](#mosaic-supply-change-transaction-schema-(0x424e)))
 ```
 Property                                Types                                       Description
 ----------------------------------------------------------------------------------------------------------------------

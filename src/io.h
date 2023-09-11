@@ -23,7 +23,7 @@
 /**
  * A set of higher level io commands that hide the complexity of 
  * 'io_exchange()' and flags 'IO_RETURN_AFTER_TX' and 'IO_ASYNCH_REPLY', 
- * by implemeting a simple state machine shown below: 
+ * by implementing a simple state machine shown below:
  * 
  * 
  *   _______________  init()  _______   receive()        __________ 
