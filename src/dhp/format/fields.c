@@ -19,6 +19,7 @@
 #include "limitations.h"
 
 void resolve_fieldname(const field_t *field, char* dst) {
+    // Get field if field's data type is Int8 (0x01)
     if (field->dataType == STI_INT8) {
         switch (field->id) {
             CASE_FIELDNAME(DHP_INT8_MAM_REMOVAL_DELTA, "Min Removal")
@@ -26,6 +27,7 @@ void resolve_fieldname(const field_t *field, char* dst) {
         }
     }
 
+    // Resolve field name if field's data type is UInt8 (0x02)
     if (field->dataType == STI_UINT8) {
         switch (field->id) {
             CASE_FIELDNAME(DHP_UINT8_TXN_MESSAGE_TYPE, "Message Type")
@@ -43,12 +45,15 @@ void resolve_fieldname(const field_t *field, char* dst) {
         }
     }
 
+    // Resolve field name if field's data type is Int16 (0x03)
     if (field->dataType == STI_INT16) {
-        switch (field->id) {
-            CASE_FIELDNAME(DHP_INT16_VALUE_DELTA, "Value Size Delta")
+        if (field->id == DHP_INT16_VALUE_DELTA) {
+            snprintf(dst, MAX_FIELDNAME_LEN, "Value Size Delta");
+            return;
         }
     }
 
+    // Resolve field name if field's data type is UInt16 (0x04)
     if (field->dataType == STI_UINT16) {
         switch (field->id) {
             CASE_FIELDNAME(DHP_UINT16_TRANSACTION_TYPE, "Transaction Type")
@@ -61,6 +66,7 @@ void resolve_fieldname(const field_t *field, char* dst) {
         }
     }
 
+    // Resolve field name if field's data type is UInt32 (0x05)
     if (field->dataType == STI_UINT32) {
         switch (field->id) {
             CASE_FIELDNAME(DHP_UINT32_VKL_START_POINT, "Start point")
@@ -68,6 +74,7 @@ void resolve_fieldname(const field_t *field, char* dst) {
         }
     }
 
+    // Resolve field name if field's data type is UInt64 (0x06)
     if (field->dataType == STI_UINT64) {
         switch (field->id) {
             CASE_FIELDNAME(DHP_UINT64_DURATION, "Duration")
@@ -79,6 +86,7 @@ void resolve_fieldname(const field_t *field, char* dst) {
         }
     }
 
+    // Resolve field name if field's data type is Hash256 (0x07)
     if (field->dataType == STI_HASH256) {
         switch (field->id) {
             CASE_FIELDNAME(DHP_HASH256_AGG_HASH, "Agg. Tx Hash")
@@ -86,6 +94,7 @@ void resolve_fieldname(const field_t *field, char* dst) {
         }
     }
 
+    // Resolve field name if field's data type is Public Key (0x08)
     if (field->dataType == STI_PUBLIC_KEY) {
         switch (field->id) {
             CASE_FIELDNAME(DHP_PUBLICKEY_ACCOUNT_KEY_LINK, "Linked Acct. PbK")
@@ -95,6 +104,7 @@ void resolve_fieldname(const field_t *field, char* dst) {
         }
     }
 
+    // Resolve field name if field's data type is Address (0x09)
     if (field->dataType == STI_ADDRESS) {
         switch (field->id) {
             CASE_FIELDNAME(DHP_STR_RECIPIENT_ADDRESS, "Recipient")
@@ -103,6 +113,7 @@ void resolve_fieldname(const field_t *field, char* dst) {
         }
     }
 
+    // Resolve field name if field's data type is Mosaic Currency (0xA1)
     if (field->dataType == STI_MOSAIC_CURRENCY) {
         switch (field->id) {
             CASE_FIELDNAME(DHP_MOSAIC_AMOUNT, "Amount")
@@ -110,12 +121,15 @@ void resolve_fieldname(const field_t *field, char* dst) {
         }
     }
 
+    // Resolve field name if field's data type is DHP Currency (0xA0)
     if (field->dataType == STI_DHP) {
-        switch (field->id) {
-            CASE_FIELDNAME(DHP_UINT64_TXN_FEE, "Fee")
+        if (field->id == DHP_UINT64_TXN_FEE) {
+            snprintf(dst, MAX_FIELDNAME_LEN, "Fee");
+            return;
         }
     }
 
+    // Resolve field name if field's data type is Message (0xA2)
     if (field->dataType == STI_MESSAGE) {
         switch (field->id) {
             CASE_FIELDNAME(DHP_STR_TXN_MESSAGE, "Message")
@@ -123,6 +137,7 @@ void resolve_fieldname(const field_t *field, char* dst) {
         }
     }
 
+    // Resolve field name if field's data type is Hex Message (0xA4)
     if (field->dataType == STI_HEX_MESSAGE) {
         switch (field->id) {
             CASE_FIELDNAME(DHP_STR_TXN_HARVESTING, "Harvesting Message")
@@ -132,6 +147,7 @@ void resolve_fieldname(const field_t *field, char* dst) {
         }
     }
 
+    // Resolve field name if field's data type is STR (0x17)
     if (field->dataType == STI_STR) {
         switch (field->id) {
             CASE_FIELDNAME(DHP_UNKNOWN_MOSAIC, "Unknown Mosaic")
@@ -140,6 +156,7 @@ void resolve_fieldname(const field_t *field, char* dst) {
         }
     }
 
+    // Resolve field name if field's data type is UInt8 Addition (0xA5)
     if (field->dataType == STI_UINT8_ADDITION) {
         switch (field->id) {
             CASE_FIELDNAME(DHP_UINT8_AA_RESTRICTION, "Addition Count")
@@ -148,6 +165,7 @@ void resolve_fieldname(const field_t *field, char* dst) {
         }
     }
 
+    // Resolve field name if field's data type is UInt8 Deletion (0xA6)
     if (field->dataType == STI_UINT8_DELETION) {
         switch (field->id) {
             CASE_FIELDNAME(DHP_UINT8_AA_RESTRICTION, "Deletion Count")
