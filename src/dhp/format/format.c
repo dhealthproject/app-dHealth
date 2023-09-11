@@ -1,20 +1,20 @@
 /*******************************************************************************
-*   DHP Wallet
-*   (c) 2017 Ledger
-*   (c) 2023 dHealth
-*
-*  Licensed under the Apache License, Version 2.0 (the "License");
-*  you may not use this file except in compliance with the License.
-*  You may obtain a copy of the License at
-*
-*      http://www.apache.org/licenses/LICENSE-2.0
-*
-*  Unless required by applicable law or agreed to in writing, software
-*  distributed under the License is distributed on an "AS IS" BASIS,
-*  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-*  See the License for the specific language governing permissions and
-*  limitations under the License.
-********************************************************************************/
+ *   DHP Wallet
+ *   (c) 2017 Ledger
+ *   (c) 2023 dHealth
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ ********************************************************************************/
 #include <string.h>
 #include <inttypes.h>
 #include "format.h"
@@ -214,9 +214,12 @@ static void address_formatter(const field_t *field, char *dst) {
 
 static void mosaic_formatter(const field_t *field, char *dst) {
     if (field->dataType == STI_MOSAIC_CURRENCY) {
-        const mosaic_t* value = (const mosaic_t *)field->data;
-        bool is_using_mainnet = (transactionContext.bip32Path[1] & 0x7FFFFFFF) == 10111 ? true : false;
-        if ((value->mosaicId == (is_using_mainnet ? DHP_MAINNET_MOSAIC_ID : DHP_TESTNET_MOSAIC_ID)) || field->id == DHP_MOSAIC_HL_QUANTITY) {
+        const mosaic_t *value = (const mosaic_t *) field->data;
+        bool is_using_mainnet =
+            (transactionContext.bip32Path[1] & 0x7FFFFFFF) == 10111 ? true : false;
+        if ((value->mosaicId ==
+             (is_using_mainnet ? DHP_MAINNET_MOSAIC_ID : DHP_TESTNET_MOSAIC_ID)) ||
+            field->id == DHP_MOSAIC_HL_QUANTITY) {
             dhp_print_amount(value->amount, 6, "DHP", dst, MAX_FIELD_LEN);
         } else {
             char asset[] = "micro";
@@ -232,8 +235,8 @@ static void dhp_formatter(const field_t *field, char *dst) {
 }
 
 static void hex_msg_formatter(const field_t *field, char *dst) {
-    if (field->length >= MAX_FIELD_LEN/2 - 1) {
-        snprintf_hex2ascii(dst, MAX_FIELD_LEN, &field->data[0], MAX_FIELD_LEN/2 - 1);
+    if (field->length >= MAX_FIELD_LEN / 2 - 1) {
+        snprintf_hex2ascii(dst, MAX_FIELD_LEN, &field->data[0], MAX_FIELD_LEN / 2 - 1);
     } else {
         snprintf_hex2ascii(dst, MAX_FIELD_LEN, &field->data[0], field->length);
     }
