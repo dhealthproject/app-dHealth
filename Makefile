@@ -20,19 +20,19 @@ $(error Environment variable BOLOS_SDK is not set)
 endif
 include $(BOLOS_SDK)/Makefile.defines
 
-#  43	0x8000002b	XYM	SYMBOL
-APPNAME = 'Symbol'
+#  43	0x8000002b	DHP	DHEALTH
+APPNAME = 'dHealth'
 
 ifeq ($(TARGET_NAME),$(filter $(TARGET_NAME),TARGET_NANOX TARGET_STAX))
 APP_LOAD_FLAGS=--appFlags 0x200  # APPLICATION_FLAG_BOLOS_SETTINGS
 else
 APP_LOAD_FLAGS=--appFlags 0x000
 endif
-APP_LOAD_PARAMS=$(APP_LOAD_FLAGS) --path "44'/4343'" --path "44'/1'" --curve secp256k1 --curve ed25519 $(COMMON_LOAD_PARAMS)
+APP_LOAD_PARAMS=$(APP_LOAD_FLAGS) --path "44'/10111'" --path "44'/1'" --curve secp256k1 --curve ed25519 $(COMMON_LOAD_PARAMS)
 
 APPVERSION_M=1
 APPVERSION_N=0
-APPVERSION_P=8
+APPVERSION_P=0
 APPVERSION=$(APPVERSION_M).$(APPVERSION_N).$(APPVERSION_P)
 DEFINES   += UNUSED\(x\)=\(void\)x
 DEFINES   += APPNAME=\"$(APPNAME)\"
@@ -41,11 +41,11 @@ DEFINES   += APPVERSION=\"$(APPVERSION)\"
 DEFINES += $(DEFINES_LIB)
 
 ifeq ($(TARGET_NAME),TARGET_NANOS)
-ICONNAME=icons/nanos_app_symbol.gif
+ICONNAME=icons/nanos_app_dHealth.gif
 else ifeq ($(TARGET_NAME),TARGET_STAX)
-ICONNAME=icons/stax_app_symbol_32px.gif
+ICONNAME=icons/stax_app_dHealth_32px.gif
 else
-ICONNAME=icons/nanox_app_symbol.gif
+ICONNAME=icons/nanox_app_dHealth.gif
 endif
 
 ################
@@ -64,7 +64,7 @@ DEFINES   += LEDGER_MAJOR_VERSION=$(APPVERSION_M) LEDGER_MINOR_VERSION=$(APPVERS
 
 # U2F
 # DEFINES   +=  HAVE_U2F HAVE_IO_U2F
-# DEFINES   +=  U2F_PROXY_MAGIC=\"XYM\"
+# DEFINES   +=  U2F_PROXY_MAGIC=\"DHP\"
 
 DEFINES   += USB_SEGMENT_SIZE=64
 DEFINES   += BLE_SEGMENT_SIZE=32
@@ -156,4 +156,4 @@ delete:
 include $(BOLOS_SDK)/Makefile.rules
 
 listvariants:
-	@echo VARIANTS COIN xym
+	@echo VARIANTS COIN dhp

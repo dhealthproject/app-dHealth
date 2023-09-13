@@ -1,6 +1,6 @@
-#include "xym/format/printers.h"
-#include "xym/format/format.h"
-#include "xym/parse/xym_parse.h"
+#include "dhp/format/printers.h"
+#include "dhp/format/format.h"
+#include "dhp/parse/dhp_parse.h"
 #include "buffer.h"
 #include "apdu/global.h"
 

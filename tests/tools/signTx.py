@@ -9,10 +9,10 @@ from pathlib import Path
 from ragger.backend import LedgerCommBackend
 
 CORPUS_DIR = Path(__file__).parent.parent / "corpus"
-SYMBOL_LIB_DIRECTORY = (Path(__file__).resolve().parent.parent / "functional").resolve().as_posix()
-sys.path.append(SYMBOL_LIB_DIRECTORY)
-from apps.symbol import SymbolClient
-from apps.symbol_transaction_builder import encode_txn_context
+DHEALTH_LIB_DIRECTORY = (Path(__file__).resolve().parent.parent / "functional").resolve().as_posix()
+sys.path.append(DHEALTH_LIB_DIRECTORY)
+from apps.dHealth import dHealthClient
+from apps.dHealth_transaction_builder import encode_txn_context
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--path', help="BIP 32 path to use")
@@ -31,7 +31,7 @@ with open(args.file) as f:
 message = encode_txn_context(obj)
 
 with LedgerCommBackend(None, interface="hid") as backend:
-    nem = SymbolClient(backend)
+    nem = dHealthClient(backend)
 
     with nem.send_async_sign_message(args.path, message):
         print("Please accept the request on the device")

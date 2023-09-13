@@ -7,9 +7,9 @@ from pathlib import Path
 
 from ragger.backend import LedgerCommBackend
 
-SYMBOL_LIB_DIRECTORY = (Path(__file__).resolve().parent.parent / "functional").resolve().as_posix()
-sys.path.append(SYMBOL_LIB_DIRECTORY)
-from apps.symbol import SymbolClient, TESTNET
+DHEALTH_LIB_DIRECTORY = (Path(__file__).resolve().parent.parent / "functional").resolve().as_posix()
+sys.path.append(DHEALTH_LIB_DIRECTORY)
+from apps.dHealth import dHealthClient, TESTNET
 
 
 parser = argparse.ArgumentParser()
@@ -23,7 +23,7 @@ if args.path is None:
 
 
 with LedgerCommBackend(None, interface="hid") as backend:
-    client = SymbolClient(backend)
+    client = dHealthClient(backend)
 
     if args.confirm:
         with client.send_async_get_public_key_confirm(args.path, TESTNET):

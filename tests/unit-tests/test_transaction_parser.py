@@ -7,9 +7,9 @@ from pathlib import Path
 from subprocess import run
 
 
-SYMBOL_LIB_DIRECTORY = (Path(__file__).resolve().parent.parent / "functional").resolve().as_posix()
-sys.path.append(SYMBOL_LIB_DIRECTORY)
-from apps.symbol_transaction_builder import encode_txn_context
+DHEALTH_LIB_DIRECTORY = (Path(__file__).resolve().parent.parent / "functional").resolve().as_posix()
+sys.path.append(DHEALTH_LIB_DIRECTORY)
+from apps.dHealth_transaction_builder import encode_txn_context
 
 CORPUS_DIR = Path(__file__).resolve().parent.parent / "corpus"
 PARSER_BINARY = (Path(__file__).parent / "build/test_transaction_parser").resolve().as_posix()
@@ -20,12 +20,12 @@ TESTS_CASES = {
     "transfer_transaction.json": [
         ("Transaction Type", "Transfer"),
         ("Recipient", "TDZKL2HAMOWRVEEF55NVCZ7C6GSWIXCI7IWAESI"),
-        ("Amount", "45 XYM"),
+        ("Amount", "45 DHP"),
         ("Message Type", "Plain text"),
         ("Message", "This is a test message"),
-        ("Fee", "2 XYM")
+        ("Fee", "2 DHP")
     ],
-    "transfer_transaction_not_xym.json": [
+    "transfer_transaction_not_dhp.json": [
         ("Transaction Type", "Transfer"),
         ("Recipient", "TDZKL2HAMOWRVEEF55NVCZ7C6GSWIXCI7IWAESI"),
         ("Mosaics", "Found 1"),
@@ -33,7 +33,7 @@ TESTS_CASES = {
         ("Amount", "45000000 micro 0x5E62990DCAC5B21A"),
         ("Message Type", "Plain text"),
         ("Message", "This is a test message"),
-        ("Fee", "2 XYM")
+        ("Fee", "2 DHP")
     ],
     "create_mosaic.json": [
         ("Transaction Type", "Aggregate Complete"),
@@ -49,42 +49,42 @@ TESTS_CASES = {
         ("Mosaic ID", "532CB823113F2471"),
         ("Change Direction", "Increase"),
         ("Change Amount", "1000000"),
-        ("Fee", "2 XYM"),
+        ("Fee", "2 DHP"),
     ],
     "create_namespace.json": [
         ("Transaction Type", "Namespace Registration"),
         ("Namespace Type", "Root namespace"),
         ("Name", "foo576sgnlxdnfbdx"),
         ("Duration", "60d 0h 0m"),
-        ("Fee", "2 XYM"),
+        ("Fee", "2 DHP"),
     ],
     "create_sub_namespace.json": [
         ("Transaction Type", "Namespace Registration"),
         ("Namespace Type", "Sub namespace"),
         ("Name", "foo576sgnlxdnfbdx"),
         ("Parent ID", "000000000002A300"),
-        ("Fee", "2 XYM"),
+        ("Fee", "2 DHP"),
     ],
     "supply_change_mosaic.json": [
         ("Transaction Type", "Mosaic Supply Change"),
         ("Mosaic ID", "7CDF3B117A3C40CC"),
         ("Change Direction", "Increase"),
         ("Change Amount", "1000000"),
-        ("Fee", "2 XYM")
+        ("Fee", "2 DHP")
     ],
     "link_namespace_to_mosaic.json": [
         ("Transaction Type", "Mosaic Alias"),
         ("Alias Type", "Unlink address"),
         ("Namespace ID", "82A9D1AC587EC054"),
         ("Mosaic ID", "7CDF3B117A3C40CC"),
-        ("Fee", "2 XYM")
+        ("Fee", "2 DHP")
     ],
     "link_namespace_to_address.json": [
         ("Transaction Type", "Address Alias"),
         ("Alias Type", "Link address"),
         ("Namespace ID", "82A9D1AC587EC054"),
         ("Address", "TDZKL2HAMOWRVEEF55NVCZ7C6GSWIXCI7IWAESI"),
-        ("Fee", "2 XYM")
+        ("Fee", "2 DHP")
     ],
     "account_address_restriction.json": [
         ("Transaction Type", "Account Address Restriction"),
@@ -92,9 +92,9 @@ TESTS_CASES = {
         ("Address", "TDZKL2HAMOWRVEEF55NVCZ7C6GSWIXCI7IWAESI"),
         ("Deletion Count", "Not change"),
         ("Restriction Flag", "Block"),
-        ("Restriction Flag", "Imcoming"),
+        ("Restriction Flag", "Incoming"),
         ("Restriction Flag", "Address"),
-        ("Fee", "0.16 XYM")
+        ("Fee", "0.16 DHP")
     ],
     "account_mosaic_restriction.json": [
         ("Transaction Type", "Account Mosaic Restriction"),
@@ -103,7 +103,7 @@ TESTS_CASES = {
         ("Deletion Count", "Not change"),
         ("Restriction Flag", "Block"),
         ("Restriction Flag", "Mosaic"),
-        ("Fee", "0.144 XYM")
+        ("Fee", "0.144 DHP")
     ],
     "account_operation_restriction.json": [
         ("Transaction Type", "Account Operation Restriction"),
@@ -113,7 +113,7 @@ TESTS_CASES = {
         ("Restriction Flag", "Block"),
         ("Restriction Flag", "Outgoing"),
         ("Restriction Flag", "Transaction Type"),
-        ("Fee", "0.138 XYM")
+        ("Fee", "0.138 DHP")
     ],
     "account_multisig.json": [
         ("Transaction Type", "Aggregate Bonded"),
@@ -125,24 +125,24 @@ TESTS_CASES = {
         ("Address Del Num", "0"),
         ("Min Approval", "Add 1 address(es)"),
         ("Min Removal", "Add 1 address(es)"),
-        ("Fee", "2 XYM")
+        ("Fee", "2 DHP")
     ],
     "hash_lock_account_multisig.json": [
         ("Transaction Type", "Funds Lock"),
-        ("Lock Quantity", "10 XYM"),
+        ("Lock Quantity", "10 DHP"),
         ("Duration", "0d 4h 0m"),
         ("Tx Hash", "2B51EBCBC3E40EFE8AF68A0408F5A72474B1327A64E3E3B47D9B139230C7833B"),
-        ("Fee", "2 XYM")
+        ("Fee", "2 DHP")
     ],
     "multisig_transfer_transaction.json": [
         ("Transaction Type", "Aggregate Bonded"),
         ("Agg. Tx Hash", "4941C270B56778E01629FC82EDDC622668F076CE1583AFCCA3F6DE7FE03615BB"),
         ("Detail TX Type", "Transfer"),
         ("Recipient", "TBKQPST7HUOJA2PBNYNA7TT4LLKGA5BB5UY6M4Y"),
-        ("Amount", "10 XYM"),
+        ("Amount", "10 DHP"),
         ("Message Type", "Plain text"),
         ("Message", "Test message"),
-        ("Fee", "0.03024 XYM"),
+        ("Fee", "0.03024 DHP"),
     ],
     "multisig_create_mosaic.json": [
         ("Transaction Type", "Aggregate Bonded"),
@@ -158,7 +158,7 @@ TESTS_CASES = {
         ("Mosaic ID", "78CA2F4797C65A64"),
         ("Change Direction", "Increase"),
         ("Change Amount", "500000000"),
-        ("Fee", "0.033696 XYM"),
+        ("Fee", "0.033696 DHP"),
     ],
     "multisig_create_namespace.json": [
         ("Transaction Type", "Aggregate Bonded"),
@@ -167,31 +167,31 @@ TESTS_CASES = {
         ("Namespace Type", "Root namespace"),
         ("Name", "multisig"),
         ("Duration", "60d 0h 0m"),
-        ("Fee", "0.026784 XYM")
+        ("Fee", "0.026784 DHP")
     ],
     "hash_lock_multisig_create_namespace.json": [
         ("Transaction Type", "Funds Lock"),
-        ("Lock Quantity", "10 XYM"),
+        ("Lock Quantity", "10 DHP"),
         ("Duration", "0d 8h 20m"),
         ("Tx Hash", "E019A4A92002505B8B5029AE556958ADCDFBEDAC26C2F79DE1668C5BC588EDF7"),
-        ("Fee", "0.019872 XYM"),
+        ("Fee", "0.019872 DHP"),
     ],
     "multisig_create_sub_namespace.json": [
         ("Transaction Type", "Namespace Registration"),
         ("Namespace Type", "Sub namespace"),
         ("Name", "sub_namespace_multisig"),
         ("Parent ID", "D64FAC0976CC0914"),
-        ("Fee", "0.018144 XYM")
+        ("Fee", "0.018144 DHP")
     ],
     "cosignature_transaction.json": [
         ("Transaction Type", "Aggregate Bonded"),
         ("Agg. Tx Hash", "0EFE6E4A881D312984767CABBE53DAC00419E179932A5C784B51132FBE5F7C88"),
         ("Detail TX Type", "Transfer"),
         ("Recipient", "TDZKL2HAMOWRVEEF55NVCZ7C6GSWIXCI7IWAESI"),
-        ("Amount", "10 XYM"),
+        ("Amount", "10 DHP"),
         ("Message Type", "Plain text"),
         ("Message", "SDV"),
-        ("Fee", "0.48 XYM")
+        ("Fee", "0.48 DHP")
     ],
     "account_metadata_transaction.json": [
         ("Transaction Type", "Aggregate Complete"),
@@ -201,7 +201,7 @@ TESTS_CASES = {
         ("Metadata Key", "AB8385A30DFCEA7A"),
         ("Value", "this is the value field of account metadata"),
         ("Value Size Delta", "Increase 43 byte(s)"),
-        ("Fee", "0.296 XYM")
+        ("Fee", "0.296 DHP")
     ],
     "mosaic_metadata_transaction.json": [
         ("Transaction Type", "Aggregate Complete"),
@@ -212,7 +212,7 @@ TESTS_CASES = {
         ("Metadata Key", "D00C0B75EFB5FA9F"),
         ("Value", "This is the mosaic metadata value field"),
         ("Value Size Delta", "Increase 39 byte(s)"),
-        ("Fee", "0.304 XYM")
+        ("Fee", "0.304 DHP")
     ],
     "namespace_metadata_transaction.json": [
         ("Transaction Type", "Aggregate Complete"),
@@ -223,7 +223,7 @@ TESTS_CASES = {
         ("Metadata Key", "9E828FFAA77C9D6D"),
         ("Value", "Namespace metadata value field"),
         ("Value Size Delta", "Increase 30 byte(s)"),
-        ("Fee", "0.296 XYM")
+        ("Fee", "0.296 DHP")
     ],
     "delegated_harvesting.json": [
         ("Transaction Type", "Aggregate Complete"),
@@ -237,14 +237,14 @@ TESTS_CASES = {
         ("Inner TX Type", "Node Key Link"),
         ("Action", "Link"),
         ("Linked Node PbK", "81890592F960AAEBDA7612C8917FA9C267A845D78D74D4B3651AF093E6775001"),
-        ("Fee", "0.0432 XYM")
+        ("Fee", "0.0432 DHP")
     ],
     "persistent_harvesting_delegation_transfer.json": [
         ("Transaction Type", "Transfer"),
         ("Recipient", "TBR6AUIUNBRSXJ34RSCZOJTK4GQNVDEUEDCPMIY"),
         ("Message Type", "Persistent harvesting delegation"),
         ("Harvesting Message", "FE2A8061577301E28AEC26D42EFCE832BE498BB8CFCC7687BC5BC6B22A82F4BA415A7DF13E1DEA994EAD70125CA250DD6CD8AEA8BAE26AD9A8FC9CB45A996E59BD8894E3D618043887E2383A6BB161A18AB58F406D7DFF384CBD6A669FD152E5AD84B372425212CAAECCB712674AA6C737894BB14FADFE93A3E3AF73A34187D49740891C"),
-        ("Fee", "0.292 XYM")
+        ("Fee", "0.292 DHP")
     ]
 }
 

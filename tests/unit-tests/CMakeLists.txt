@@ -1,10 +1,10 @@
 cmake_minimum_required(VERSION 3.10)
 
-project(SymbolTests)
+project(dHealthTests)
 
 set(APP_SRC_DIR "../../src")
 
-include_directories("${APP_SRC_DIR}" "${APP_SRC_DIR}/xym")
+include_directories("${APP_SRC_DIR}" "${APP_SRC_DIR}/dhp")
 
 # Build with code coverage generation
 if(CODE_COVERAGE)
@@ -24,16 +24,16 @@ set(APP_SOURCES
     ${APP_SRC_DIR}/base32.h
     ${APP_SRC_DIR}/buffer.c
     ${APP_SRC_DIR}/buffer.h
-    ${APP_SRC_DIR}/xym/xym_helpers.c
-    ${APP_SRC_DIR}/xym/xym_helpers.h
-    ${APP_SRC_DIR}/xym/format/fields.c
-    ${APP_SRC_DIR}/xym/format/fields.h
-    ${APP_SRC_DIR}/xym/format/format.c
-    ${APP_SRC_DIR}/xym/format/format.h
-    ${APP_SRC_DIR}/xym/format/printers.c
-    ${APP_SRC_DIR}/xym/format/printers.h
-    ${APP_SRC_DIR}/xym/parse/xym_parse.c
-    ${APP_SRC_DIR}/xym/parse/xym_parse.h
+    ${APP_SRC_DIR}/dhp/dhp_helpers.c
+    ${APP_SRC_DIR}/dhp/dhp_helpers.h
+    ${APP_SRC_DIR}/dhp/format/fields.c
+    ${APP_SRC_DIR}/dhp/format/fields.h
+    ${APP_SRC_DIR}/dhp/format/format.c
+    ${APP_SRC_DIR}/dhp/format/format.h
+    ${APP_SRC_DIR}/dhp/format/printers.c
+    ${APP_SRC_DIR}/dhp/format/printers.h
+    ${APP_SRC_DIR}/dhp/parse/dhp_parse.c
+    ${APP_SRC_DIR}/dhp/parse/dhp_parse.h
 )
 
 add_executable(test_transaction_parser
@@ -52,10 +52,10 @@ add_compile_definitions(test_transaction_parser PRIVATE FUZZ)
 target_compile_options(test_bip32_path_extraction PRIVATE -Wall -Wextra -pedantic -Werror)
 add_compile_definitions(test_bip32_path_extraction PRIVATE FUZZ)
 
-target_include_directories(test_transaction_parser PRIVATE . ${APP_SRC_DIR}/ ${APP_SRC_DIR}//xym)
+target_include_directories(test_transaction_parser PRIVATE . ${APP_SRC_DIR}/ ${APP_SRC_DIR}//dhp)
 target_link_libraries(test_transaction_parser PRIVATE bsd)
 
-target_include_directories(test_bip32_path_extraction PRIVATE . ${APP_SRC_DIR}/ ${APP_SRC_DIR}//xym)
+target_include_directories(test_bip32_path_extraction PRIVATE . ${APP_SRC_DIR}/ ${APP_SRC_DIR}//dhp)
 target_link_libraries(test_bip32_path_extraction PRIVATE bsd cmocka)
 
 if (FUZZ)
@@ -73,7 +73,7 @@ if (FUZZ)
         message(FATAL_ERROR "Fuzzer needs to be built with Clang")
     endif()
 
-    add_executable(fuzz_message fuzz_xym.c ${APP_SOURCES})
+    add_executable(fuzz_message fuzz_dhp.c ${APP_SOURCES})
 
     target_compile_options(fuzz_message PRIVATE
         -fsanitize=fuzzer,address,undefined
